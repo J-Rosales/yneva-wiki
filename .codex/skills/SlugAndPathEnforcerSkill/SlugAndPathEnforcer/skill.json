@@ -1,0 +1,28 @@
+{
+  "name": "Slug and Path Enforcer",
+  "description": "Validates that article slugs and file paths follow project conventions, are unique, and map deterministically to routing rules.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "auto_fix": "boolean flag to generate rename/move suggestions",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Validate slug format rules",
+    "Ensure slug uniqueness",
+    "Verify file paths match canonical routing scheme",
+    "Detect reserved or illegal slugs",
+    "Generate refactor patches when auto_fix is enabled"
+  ],
+  "outputs": [
+    "slug_validation_report.json",
+    "path_corrections.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "auto_fix": true,
+      "strict": false
+    }
+  ]
+}

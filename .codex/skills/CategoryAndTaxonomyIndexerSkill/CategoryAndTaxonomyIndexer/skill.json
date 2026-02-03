@@ -1,0 +1,31 @@
+{
+  "name": "Category and Taxonomy Indexer",
+  "description": "Aggregates category and taxonomy metadata from article frontmatter to generate category pages and browsing indexes, validating category existence and hierarchy consistency.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "output_dir": "Directory where taxonomy artifacts will be written",
+    "category_key": "Frontmatter key used for categories (default: categories)",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Extract category/taxonomy metadata from normalized frontmatter",
+    "Validate category names, casing, and existence rules",
+    "Build category membership indexes (category -> articles)",
+    "Optionally build hierarchical/category-tree structures when available",
+    "Emit deterministic artifacts for UI browsing pages"
+  ],
+  "outputs": [
+    "categories_index.json",
+    "category_tree.json",
+    "categories_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "output_dir": "./build/taxonomy",
+      "category_key": "categories",
+      "strict": false
+    }
+  ]
+}

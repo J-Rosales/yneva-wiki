@@ -1,0 +1,29 @@
+{
+  "name": "Internal Link Resolver and Broken-Link Report",
+  "description": "Scans all project documents for internal wiki-style links, resolves them against known articles, and generates a comprehensive report of broken or unresolved references.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "include_placeholders": "boolean flag to treat placeholder pages as valid targets",
+    "verbose": "boolean flag for detailed diagnostics"
+  },
+  "responsibilities": [
+    "Extract [[slug]] and [[slug|display]] style links",
+    "Resolve targets against the article manifest",
+    "Detect broken or orphaned links",
+    "Track inbound and outbound references",
+    "Produce actionable diagnostics"
+  ],
+  "outputs": [
+    "link_graph.json",
+    "broken_links_report.json",
+    "link_manifest.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "include_placeholders": false,
+      "verbose": true
+    }
+  ]
+}

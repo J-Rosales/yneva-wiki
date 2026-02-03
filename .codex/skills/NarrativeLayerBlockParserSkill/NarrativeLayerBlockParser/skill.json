@@ -1,0 +1,33 @@
+{
+  "name": "Narrative Layer Block Parser",
+  "description": "Parses and validates conditional narrative-layer blocks within Markdown content, producing per-layer renderable variants and ensuring default-layer correctness.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "layer_set": "Optional comma-separated list of layers to compile (default: all discovered)",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Detect narrative-layer delimiters/markers",
+    "Validate block nesting and closure",
+    "Compile per-layer content variants",
+    "Ensure a resolvable default layer exists",
+    "Emit diagnostics with file and line spans"
+  ],
+  "outputs": [
+    "layers_discovery.json",
+    "layer_variants_manifest.json",
+    "layer_parse_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "layer_set": "default,scholarly",
+      "strict": true
+    },
+    {
+      "project_root": "./wiki",
+      "strict": false
+    }
+  ]
+}

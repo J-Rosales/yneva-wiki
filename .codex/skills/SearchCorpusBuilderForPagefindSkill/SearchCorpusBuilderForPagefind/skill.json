@@ -1,0 +1,33 @@
+{
+  "name": "Search Corpus Builder for Pagefind",
+  "description": "Builds a normalized search corpus from project content and metadata, applying narrative-layer rules and producing Pagefind-ready inputs.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "output_dir": "Directory where the corpus artifacts will be written",
+    "layer": "Optional layer name to index (default: index default layer or merged policy)",
+    "include_frontmatter_fields": "Comma-separated list of frontmatter fields to include as searchable metadata",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Extract renderable text per article (respecting layer policy)",
+    "Normalize titles, headings, and body text",
+    "Emit per-page metadata for Pagefind indexing",
+    "Validate that corpus output is consistent and complete",
+    "Provide diagnostics for excluded or malformed pages"
+  ],
+  "outputs": [
+    "pagefind_corpus_manifest.json",
+    "pagefind_corpus_pages.jsonl",
+    "pagefind_corpus_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "output_dir": "./build/search",
+      "layer": "default",
+      "include_frontmatter_fields": "type,tags,era,location",
+      "strict": false
+    }
+  ]
+}

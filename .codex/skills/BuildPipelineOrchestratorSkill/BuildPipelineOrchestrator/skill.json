@@ -1,0 +1,34 @@
+{
+  "name": "Build Pipeline Orchestrator",
+  "description": "Coordinates and executes the full preprocessing and build workflow for the project in the correct dependency order, producing validated artifacts and actionable diagnostics.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the root of the wiki/content project",
+    "mode": "build | validate | clean",
+    "verbose": "boolean flag for detailed logging"
+  },
+  "responsibilities": [
+    "Run validation skills in the correct sequence",
+    "Aggregate and normalize outputs",
+    "Fail fast on critical errors",
+    "Cache intermediate artifacts",
+    "Generate final build reports"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "mode": "validate",
+      "verbose": true
+    },
+    {
+      "project_root": "./wiki",
+      "mode": "build",
+      "verbose": false
+    }
+  ],
+  "outputs": [
+    "Build manifest",
+    "Error and warning report",
+    "Generated artifacts for downstream skills"
+  ]
+}
