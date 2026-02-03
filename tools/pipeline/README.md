@@ -10,7 +10,7 @@ This folder contains the initial content pipeline for the wiki project.
 - Validates slug formatting and folder/filename alignment
 - Parses narrative layer blocks
 - Extracts internal `[[slug]]` links from the default layer
-- Emits `build/articles.json` and `build/link-graph.json`
+- Emits `build/articles.json`, `build/link-graph.json`, `build/redirects.json`, and `build/placeholders.json`
 
 ## Run
 

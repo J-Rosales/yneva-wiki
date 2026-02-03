@@ -85,28 +85,56 @@ def _read_article(path: Path) -> Article:
 def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     articles: list[Article] = []
     slugs: set[str] = set()
+    redirects: dict[str, str] = {}
 
     for path in wiki_root.rglob("*.md"):
         article = _read_article(path)
         if article.slug in slugs:
             raise BuildError(f"Duplicate slug detected: {article.slug}")
         slugs.add(article.slug)
+        for alt in article.frontmatter.get("redirects", []) or []:
+            if not isinstance(alt, str) or not alt.strip():
+                raise BuildError(f"{path}: invalid redirect entry")
+            alt_slug = alt.strip().lower()
+            if alt_slug in redirects and redirects[alt_slug] != article.slug:
+                raise BuildError(f"Redirect slug '{alt_slug}' points to multiple targets")
+            redirects[alt_slug] = article.slug
         articles.append(article)
 
     link_graph: dict[str, dict[str, list[str]]] = {}
     for article in articles:
+        resolved_outgoing: list[str] = []
+        for slug in article.outgoing:
+            resolved_outgoing.append(redirects.get(slug, slug))
         link_graph[article.slug] = {
-            "outgoing": sorted(set(article.outgoing)),
+            "outgoing": sorted(set(resolved_outgoing)),
             "incoming": [],
         }
 
     for article in articles:
-        for target in set(article.outgoing):
+        for target in set(link_graph[article.slug]["outgoing"]):
             if target in link_graph:
                 link_graph[target]["incoming"].append(article.slug)
 
     for node in link_graph.values():
         node["incoming"] = sorted(set(node["incoming"]))
+
+    placeholders: dict[str, dict[str, Any]] = {}
+    for article in articles:
+        for target in link_graph[article.slug]["outgoing"]:
+            if target not in link_graph:
+                entry = placeholders.setdefault(
+                    target,
+                    {
+                        "slug": target,
+                        "backlinks": [],
+                        "description": f"Placeholder page for '{target}'.",
+                    },
+                )
+                entry["backlinks"].append(article.slug)
+
+    for entry in placeholders.values():
+        entry["backlinks"] = sorted(set(entry["backlinks"]))
 
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "articles.json").write_text(
@@ -117,10 +145,20 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         json.dumps(link_graph, indent=2),
         encoding="utf-8",
     )
+    (out_dir / "redirects.json").write_text(
+        json.dumps(redirects, indent=2),
+        encoding="utf-8",
+    )
+    (out_dir / "placeholders.json").write_text(
+        json.dumps(placeholders, indent=2),
+        encoding="utf-8",
+    )
 
     return {
         "articles": len(articles),
         "link_graph_nodes": len(link_graph),
+        "redirects": len(redirects),
+        "placeholders": len(placeholders),
         "output": str(out_dir),
     }
 
