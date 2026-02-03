@@ -119,6 +119,56 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     for node in link_graph.values():
         node["incoming"] = sorted(set(node["incoming"]))
 
+    def _normalize_year(value: Any) -> tuple[int | None, int | None]:
+        if value is None:
+            return (None, None)
+        if isinstance(value, int):
+            return (value, value)
+        if not isinstance(value, str):
+            return (None, None)
+        raw = value.strip().lower()
+        if not raw:
+            return (None, None)
+        if raw.isdigit():
+            year = int(raw)
+            return (year, year)
+        if raw.endswith("s") and raw[:-1].isdigit():
+            decade = int(raw[:-1])
+            return (decade, decade + 9)
+        if raw.startswith("~"):
+            raw = raw[1:].strip()
+        if raw.startswith("circa "):
+            raw = raw.replace("circa ", "", 1).strip()
+        if "-" in raw:
+            parts = [p.strip() for p in raw.split("-", 1)]
+            if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
+                return (int(parts[0]), int(parts[1]))
+        return (None, None)
+
+    facets: list[dict[str, Any]] = []
+    for article in articles:
+        # Exclude redirects and placeholders from facets; use canonical slug only.
+        if article.slug in redirects:
+            continue
+        birth_year = None
+        death_year = None
+        if article.type == "person":
+            start, _ = _normalize_year(article.frontmatter.get("birth_date"))
+            end, _ = _normalize_year(article.frontmatter.get("death_date"))
+            birth_year = start
+            death_year = end
+
+        facets.append(
+            {
+                "slug": article.slug,
+                "title": article.title,
+                "type": article.type,
+                "tags": article.frontmatter.get("tags", []),
+                "birth_year": birth_year,
+                "death_year": death_year,
+            }
+        )
+
     placeholders: dict[str, dict[str, Any]] = {}
     for article in articles:
         for target in link_graph[article.slug]["outgoing"]:
@@ -153,12 +203,17 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         json.dumps(placeholders, indent=2),
         encoding="utf-8",
     )
+    (out_dir / "facets.json").write_text(
+        json.dumps(facets, indent=2),
+        encoding="utf-8",
+    )
 
     return {
         "articles": len(articles),
         "link_graph_nodes": len(link_graph),
         "redirects": len(redirects),
         "placeholders": len(placeholders),
+        "facets": len(facets),
         "output": str(out_dir),
     }
 

@@ -13,7 +13,8 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: redirect route generation, placeholder pages, layer route handling.
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
-  - Pending: Astro layouts, infobox, navboxes, layer toggle UI.
+  - Implemented: initial Astro scaffold with basic index and wiki page rendering.
+  - Pending: infobox, navboxes, layer toggle UI, full layout.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
   - Implemented: link extraction from default layer, basic link graph JSON.
@@ -21,13 +22,14 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: related-content scoring.
 
 - **Search and filters (05_search_and_filters.md)**: Not implemented
-  - Pending: Pagefind integration and facets index generation.
+  - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold.
+  - Pending: Pagefind build integration validation and full search UI.
 
 - **Genealogy (06_genealogy.md)**: Not implemented
   - Pending: genealogy schema parsing and JSON graph output.
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
-  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
+  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
   - Pending: facets and genealogy artifacts and validation expansion.
 
 - **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Not started
