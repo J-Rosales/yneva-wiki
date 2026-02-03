@@ -67,6 +67,8 @@ Use these exact triggers for git workflow automation.
 - Move all current uncommitted changes onto that branch.
 - Push the branch to the remote.
 - Ensure the new branch remains the active branch.
+- Push the active branch if it is ahead of its remote.
+- Command reference: `tools/git-ship/ship-and-branch.ps1`
 
 **SHIP AND MERGE** (uppercase)
 - Create a new branch using a kebab-case name chosen by the assistant.
@@ -75,3 +77,5 @@ Use these exact triggers for git workflow automation.
 - Before squash-merge, update the feature branch with the latest original branch (rebase preferred, merge acceptable).
 - Squash-merge the branch into the original branch that was active before the process.
 - Ensure the original branch remains the active branch.
+- Push the original branch if it is ahead of its remote.
+- Command reference: `tools/git-ship/ship-and-merge.ps1`
