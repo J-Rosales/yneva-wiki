@@ -56,6 +56,8 @@ For each article:
 
 Invalid metadata causes build failures.
 
+Baseline schema definitions live in `docs/starter-kit/11_frontmatter_schemas.md`.
+
 ### 3.2 Narrative Layer Processing
 
 - Articles may contain conditional layer blocks.  

@@ -10,6 +10,7 @@ from .frontmatter import FrontmatterError, parse_frontmatter
 from .layers import LayerParseError, parse_layers
 from .links import extract_links
 from .models import Article
+from .schema import validate_schema
 
 
 class BuildError(Exception):
@@ -61,6 +62,10 @@ def _read_article(path: Path) -> Article:
         layers = parse_layers(fm.body, default_layer=default_layer)
     except LayerParseError as exc:
         raise BuildError(f"{path}: {exc}") from exc
+
+    schema_errors = validate_schema(type_value, fm.data)
+    if schema_errors:
+        raise BuildError(f"{path}: " + "; ".join(schema_errors))
 
     links = extract_links(layers.default_content)
 
