@@ -12,6 +12,7 @@
     "astro": "^5.17.1"
   },
   "devDependencies": {
-    "pagefind": "^1.1.1"
+    "pagefind": "^1.1.1",
+    "marked": "^12.0.2"
   }
 }

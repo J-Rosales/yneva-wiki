@@ -1,0 +1,32 @@
+---
+import placeholders from "../../../build/placeholders.json" assert { type: "json" };
+
+export function getStaticPaths() {
+  return Object.keys(placeholders).map((slug) => ({
+    params: { slug },
+    props: { placeholder: placeholders[slug] },
+  }));
+}
+
+const { placeholder } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Missing: {placeholder.slug}</title>
+  </head>
+  <body>
+    <main>
+      <h1>Missing page: {placeholder.slug}</h1>
+      <p>{placeholder.description}</p>
+      <h2>Backlinks</h2>
+      <ul>
+        {placeholder.backlinks.map((slug) => (
+          <li><a href={`/wiki/${slug}/`}>{slug}</a></li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>

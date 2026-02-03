@@ -1,61 +1,99 @@
 ---
 import facets from "../../../build/facets.json" assert { type: "json" };
+import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Search</title>
-  </head>
-  <body>
-    <main>
-      <h1>Search</h1>
-      <input id="query" type="search" placeholder="Search..." />
-      <select id="typeFilter">
-        <option value="">All types</option>
-        {Array.from(new Set(facets.map((f) => f.type))).map((t) => (
-          <option value={t}>{t}</option>
-        ))}
-      </select>
-      <div id="results"></div>
-    </main>
+<BaseLayout title="Search">
+  <h1>Search</h1>
+  <input id="query" type="search" placeholder="Search..." />
+  <select id="typeFilter">
+    <option value="">All types</option>
+    {Array.from(new Set(facets.map((f) => f.type))).map((t) => (
+      <option value={t}>{t}</option>
+    ))}
+  </select>
+  <select id="tagFilter">
+    <option value="">All tags</option>
+    {Array.from(
+      new Set(
+        facets
+          .flatMap((f) => Array.isArray(f.tags) ? f.tags : [])
+          .filter(Boolean)
+      )
+    ).map((t) => (
+      <option value={t}>{t}</option>
+    ))}
+  </select>
+  <div id="results"></div>
 
-    <script type="module">
-      const facets = JSON.parse(document.getElementById("facets-data").textContent);
-      const queryInput = document.getElementById("query");
-      const typeFilter = document.getElementById("typeFilter");
-      const results = document.getElementById("results");
+  <script type="module">
+    const facets = JSON.parse(document.getElementById("facets-data").textContent);
+    const queryInput = document.getElementById("query");
+    const typeFilter = document.getElementById("typeFilter");
+    const tagFilter = document.getElementById("tagFilter");
+    const results = document.getElementById("results");
 
-      async function search() {
-        const q = queryInput.value.trim();
-        const type = typeFilter.value;
-        results.innerHTML = "";
-        if (!q) return;
+    function getUrlState() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        q: params.get("q") || "",
+        type: params.get("type") || "",
+        tag: params.get("tag") || "",
+      };
+    }
 
-        const pagefind = await import("/pagefind/pagefind.js");
-        const searchResult = await pagefind.search(q);
-        const data = await searchResult.results.map((r) => r.data());
-        const items = await Promise.all(data);
+    function setUrlState(q, type, tag) {
+      const params = new URLSearchParams();
+      if (q) params.set("q", q);
+      if (type) params.set("type", type);
+      if (tag) params.set("tag", tag);
+      const next = `${window.location.pathname}?${params.toString()}`;
+      history.replaceState(null, "", next);
+    }
 
-        const filtered = items.filter((item) => {
-          if (!type) return true;
-          return facets.find((f) => f.slug === item.url.replace("/wiki/", "").replace("/", ""))?.type === type;
-        });
+    async function search() {
+      const q = queryInput.value.trim();
+      const type = typeFilter.value;
+      const tag = tagFilter.value;
+      results.innerHTML = "";
+      setUrlState(q, type, tag);
+      if (!q) return;
 
-        for (const item of filtered) {
-          const el = document.createElement("div");
-          el.innerHTML = `<a href="${item.url}">${item.meta.title}</a><p>${item.excerpt}</p>`;
-          results.appendChild(el);
+      const pagefind = await import("/pagefind/pagefind.js");
+      const searchResult = await pagefind.search(q);
+      const data = await searchResult.results.map((r) => r.data());
+      const items = await Promise.all(data);
+
+      const filtered = items.filter((item) => {
+        if (!type) return true;
+        const record = facets.find((f) => f.slug === item.url.replace("/wiki/", "").replace("/", ""));
+        if (type && record?.type !== type) return false;
+        if (tag) {
+          const tags = Array.isArray(record?.tags) ? record.tags : [];
+          if (!tags.includes(tag)) return false;
         }
+        return true;
+      });
+
+      for (const item of filtered) {
+        const el = document.createElement("div");
+        el.innerHTML = `<a href="${item.url}">${item.meta.title}</a><p>${item.excerpt}</p>`;
+        results.appendChild(el);
       }
+    }
 
-      queryInput.addEventListener("input", search);
-      typeFilter.addEventListener("change", search);
-    </script>
+    queryInput.addEventListener("input", search);
+    typeFilter.addEventListener("change", search);
+    tagFilter.addEventListener("change", search);
 
-    <script type="application/json" id="facets-data">
-      {JSON.stringify(facets)}
-    </script>
-  </body>
-</html>
+    const state = getUrlState();
+    if (state.q) queryInput.value = state.q;
+    if (state.type) typeFilter.value = state.type;
+    if (state.tag) tagFilter.value = state.tag;
+    if (state.q) search();
+  </script>
+
+  <script type="application/json" id="facets-data">
+    {JSON.stringify(facets)}
+  </script>
+</BaseLayout>
