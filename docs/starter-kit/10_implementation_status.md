@@ -10,10 +10,11 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: type-specific infobox schemas and full validation coverage.
 
 - **Routing and URLs (02_routing_and_urls.md)**: Not implemented
-  - Pending: redirect route generation, placeholder pages, layer route handling.
+  - Implemented: redirect and placeholder route rendering in Astro.
+  - Pending: layer route handling.
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
-  - Implemented: initial Astro scaffold with basic index and wiki page rendering.
+  - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering).
   - Pending: infobox, navboxes, layer toggle UI, full layout.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
@@ -22,8 +23,9 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: related-content scoring.
 
 - **Search and filters (05_search_and_filters.md)**: Not implemented
-  - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold.
-  - Pending: Pagefind build integration validation and full search UI.
+  - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold with type and tag filtering.
+  - Implemented: Pagefind indexing scoped to article body with URL state for search filters.
+  - Pending: full search UI and result presentation enhancements.
 
 - **Genealogy (06_genealogy.md)**: Not implemented
   - Pending: genealogy schema parsing and JSON graph output.

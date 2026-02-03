@@ -1,5 +1,6 @@
 ---
 import articles from "../../../../build/articles.json" assert { type: "json" };
+import { marked } from "marked";
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -9,6 +10,7 @@ export function getStaticPaths() {
 }
 
 const { article } = Astro.props;
+const html = marked.parse(article.body);
 ---
 
 <html lang="en">
@@ -21,9 +23,7 @@ const { article } = Astro.props;
     <main>
       <h1>{article.title}</h1>
       <p><strong>Type:</strong> {article.type}</p>
-      <article>
-        <pre>{article.body}</pre>
-      </article>
+      <article data-pagefind-body set:html={html} />
     </main>
   </body>
 </html>
