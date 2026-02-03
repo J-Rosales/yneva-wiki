@@ -162,6 +162,8 @@ summary: string
 
 Additional structured fields are defined per article type via their infobox schemas.
 
+Baseline frontmatter schemas for selected types are defined in `docs/starter-kit/11_frontmatter_schemas.md`.
+
 ---
 
 ## 5. Error Handling and Validation

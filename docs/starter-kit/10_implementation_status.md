@@ -5,7 +5,8 @@ This document tracks the current implementation status relative to the starter-k
 ## Current Status
 
 - **Content model (01_content_model.md)**: Partial
-  - Implemented: content discovery, frontmatter parsing, slug/type validation, narrative layer parsing.
+  - Implemented: content discovery, frontmatter parsing, slug/type validation, narrative layer parsing, baseline schema validation for person/dynasty/polity.
+  - Implemented: expanded schema coverage across canonical types (see `11_frontmatter_schemas.md`).
   - Pending: type-specific infobox schemas and full validation coverage.
 
 - **Routing and URLs (02_routing_and_urls.md)**: Not implemented
@@ -25,7 +26,7 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: genealogy schema parsing and JSON graph output.
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
-  - Implemented: initial pipeline (`tools/pipeline`) with `articles.json` and `link-graph.json`.
+  - Implemented: initial pipeline (`tools/pipeline`) with `articles.json`, `link-graph.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
   - Pending: redirects, facets, genealogy artifacts and validation expansion.
 
 - **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Not started
@@ -33,6 +34,9 @@ This document tracks the current implementation status relative to the starter-k
 
 - **Canonical types (09_canonical_types.md)**: Implemented
   - Defined canonical type list.
+
+- **Frontmatter schemas (11_frontmatter_schemas.md)**: Implemented
+  - Baseline required fields for person, dynasty, polity.
 
 ## Local Sample Content
 
