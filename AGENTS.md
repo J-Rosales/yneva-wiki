@@ -51,6 +51,8 @@ The authoritative specification is in `docs/starter-kit/*`. When in doubt, follo
 - Update or add tests when changing pipeline behavior.
 - Run the pipeline locally after changes.
 - Validate output JSON artifacts for correctness and stability.
+- Any content added to `wiki/` must be explicitly confirmed before creation or modification.
+- Check progress against `docs/starter-kit/10_implementation_status.md` whenever a phase or milestone is reached.
 
 ## Communication Style
 - Use a neutral, technical tone only.

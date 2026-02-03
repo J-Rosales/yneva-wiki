@@ -25,6 +25,10 @@ Where:
 - `<type>` represents the article type (person, place, event, etc.)
 - `<slug>` is the unique identifier for the article
 
+**Canonical types**
+
+The canonical list of type values is defined in `docs/starter-kit/09_canonical_types.md`.
+
 ### 1.2 Slug Rules
 
 - Every article must have a unique slug.

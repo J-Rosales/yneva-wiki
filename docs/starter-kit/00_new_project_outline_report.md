@@ -92,6 +92,7 @@ Key concepts:
 - Each article has a unique **slug** (lowercase kebab‑case)  
 - Titles are display names only  
 - Article type determines layout and metadata  
+ - Canonical type values are listed in `docs/starter-kit/09_canonical_types.md`
 
 ### Frontmatter Metadata
 
