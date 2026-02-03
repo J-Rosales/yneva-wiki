@@ -1,0 +1,31 @@
+{
+  "name": "Faceted Filter Index Generator",
+  "description": "Generates the structured JSON index used by the faceted filter UI by aggregating normalized frontmatter across articles and validating filter key/value consistency.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "output_dir": "Directory where the filter index artifacts will be written",
+    "facet_keys": "Comma-separated list of frontmatter keys to treat as facets (e.g., type,tags,era,location)",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Aggregate normalized metadata across all articles",
+    "Compute facet value sets and counts",
+    "Validate facet key/value consistency (typos, casing, sparsity)",
+    "Emit UI-friendly JSON index artifacts",
+    "Produce a diagnostics report for missing/invalid facet data"
+  ],
+  "outputs": [
+    "facets_index.json",
+    "facets_values.json",
+    "facets_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "output_dir": "./build/facets",
+      "facet_keys": "type,tags,era,location",
+      "strict": false
+    }
+  ]
+}

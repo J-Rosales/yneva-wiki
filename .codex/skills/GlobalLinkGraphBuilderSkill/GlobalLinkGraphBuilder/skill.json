@@ -1,0 +1,31 @@
+{
+  "name": "Global Link Graph Builder",
+  "description": "Builds a global article link graph from resolved internal links, computing inbound/outbound counts, detecting orphans/dead-ends, and emitting JSON for UI and analytics.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "include_redirects": "boolean flag to include redirect edges in the graph",
+    "min_edge_weight": "integer minimum weight threshold for emitting edges (default: 1)",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Ingest resolved link data (or re-extract if necessary)",
+    "Construct directed graph (nodes=articles, edges=links)",
+    "Compute inbound/outbound degrees and basic centrality stats",
+    "Detect orphans, dead-ends, and isolated subgraphs",
+    "Emit deterministic graph artifacts and diagnostics"
+  ],
+  "outputs": [
+    "global_link_graph.json",
+    "global_link_metrics.json",
+    "global_link_graph_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "include_redirects": true,
+      "min_edge_weight": 1,
+      "strict": false
+    }
+  ]
+}

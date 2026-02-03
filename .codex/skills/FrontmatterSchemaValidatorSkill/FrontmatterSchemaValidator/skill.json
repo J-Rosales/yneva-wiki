@@ -1,0 +1,26 @@
+{
+  "name": "Frontmatter Schema Validator",
+  "description": "Parses and validates YAML frontmatter of all articles to ensure required fields, correct types, and schema compliance.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Parse YAML frontmatter blocks",
+    "Validate required fields",
+    "Check data types and allowed values",
+    "Report line-level diagnostics",
+    "Emit normalized metadata"
+  ],
+  "outputs": [
+    "validation_report.json",
+    "normalized_frontmatter.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "strict": true
+    }
+  ]
+}

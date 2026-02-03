@@ -1,0 +1,31 @@
+{
+  "name": "Redirect and Alias Manager",
+  "description": "Validates and manages redirects and aliases for articles, detecting chains/cycles and emitting routing-compatible redirect artifacts to preserve stable URLs during refactors.",
+  "version": "1.0.0",
+  "parameters": {
+    "project_root": "Path to the wiki/content project",
+    "redirect_key": "Frontmatter key used to declare redirects/aliases (e.g., redirects, aliases)",
+    "max_chain_length": "Maximum allowed redirect chain length before warning/error (default: 1)",
+    "strict": "boolean flag to treat warnings as errors"
+  },
+  "responsibilities": [
+    "Parse redirect/alias declarations from frontmatter or dedicated config files",
+    "Validate target existence and canonicalization",
+    "Detect redirect chains and cycles",
+    "Emit build artifacts compatible with the routing/static site framework",
+    "Produce actionable diagnostics for broken or ambiguous redirects"
+  ],
+  "outputs": [
+    "redirects_index.json",
+    "redirects_artifacts_manifest.json",
+    "redirects_report.json"
+  ],
+  "example_invocations": [
+    {
+      "project_root": "./wiki",
+      "redirect_key": "redirects,aliases",
+      "max_chain_length": 1,
+      "strict": false
+    }
+  ]
+}
