@@ -92,7 +92,7 @@ The pipeline enforces:
 
 - Unique slugs  
 - Correct slug formatting  
-- Valid article types  
+ - Valid article types (must match the canonical list in `docs/starter-kit/09_canonical_types.md`)  
 - Conformance to metadata schemas  
 
 ### 4.2 Link Validation
