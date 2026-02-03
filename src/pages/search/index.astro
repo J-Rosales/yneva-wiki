@@ -1,0 +1,61 @@
+---
+import facets from "../../../build/facets.json" assert { type: "json" };
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+  </head>
+  <body>
+    <main>
+      <h1>Search</h1>
+      <input id="query" type="search" placeholder="Search..." />
+      <select id="typeFilter">
+        <option value="">All types</option>
+        {Array.from(new Set(facets.map((f) => f.type))).map((t) => (
+          <option value={t}>{t}</option>
+        ))}
+      </select>
+      <div id="results"></div>
+    </main>
+
+    <script type="module">
+      const facets = JSON.parse(document.getElementById("facets-data").textContent);
+      const queryInput = document.getElementById("query");
+      const typeFilter = document.getElementById("typeFilter");
+      const results = document.getElementById("results");
+
+      async function search() {
+        const q = queryInput.value.trim();
+        const type = typeFilter.value;
+        results.innerHTML = "";
+        if (!q) return;
+
+        const pagefind = await import("/pagefind/pagefind.js");
+        const searchResult = await pagefind.search(q);
+        const data = await searchResult.results.map((r) => r.data());
+        const items = await Promise.all(data);
+
+        const filtered = items.filter((item) => {
+          if (!type) return true;
+          return facets.find((f) => f.slug === item.url.replace("/wiki/", "").replace("/", ""))?.type === type;
+        });
+
+        for (const item of filtered) {
+          const el = document.createElement("div");
+          el.innerHTML = `<a href="${item.url}">${item.meta.title}</a><p>${item.excerpt}</p>`;
+          results.appendChild(el);
+        }
+      }
+
+      queryInput.addEventListener("input", search);
+      typeFilter.addEventListener("change", search);
+    </script>
+
+    <script type="application/json" id="facets-data">
+      {JSON.stringify(facets)}
+    </script>
+  </body>
+</html>
