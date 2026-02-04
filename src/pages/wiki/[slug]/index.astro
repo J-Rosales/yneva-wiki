@@ -1,5 +1,6 @@
 ---
 import articles from "../../../../build/articles.json" assert { type: "json" };
+import placeholders from "../../../../build/placeholders.json" assert { type: "json" };
 import { marked } from "marked";
 import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
 import Navbox from "../../../components/Navbox.astro";
@@ -11,18 +12,26 @@ import FamilyTree from "../../../components/FamilyTree.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
-  return articles.map((article) => ({
+  const articlePaths = articles.map((article) => ({
     params: { slug: article.slug },
-    props: { article },
+    props: { article, placeholder: null },
   }));
+  const placeholderPaths = Object.keys(placeholders).map((slug) => ({
+    params: { slug },
+    props: { article: null, placeholder: placeholders[slug] },
+  }));
+  return [...articlePaths, ...placeholderPaths];
 }
 
-const { article } = Astro.props;
-const html = marked.parse(article.body);
-const rels = genealogy[article.slug] || null;
-const showLayers = article.available_layers && article.available_layers.length > 1;
+const { article, placeholder } = Astro.props;
+if (!article && placeholder) {
+  // Placeholder page is rendered below.
+}
+const html = article ? marked.parse(article.body) : "";
+const rels = article ? genealogy[article.slug] || null : null;
+const showLayers = article ? article.available_layers && article.available_layers.length > 1 : false;
 const articlesBySlug = new Set(articles.map((a) => a.slug));
-const navboxRefs = Array.isArray(article.frontmatter?.navboxes) ? article.frontmatter.navboxes : [];
+const navboxRefs = article && Array.isArray(article.frontmatter?.navboxes) ? article.frontmatter.navboxes : [];
 const navboxList = navboxRefs
   .map((ref) => {
     const match = navboxes.find((n) => n.id === ref.id);
@@ -30,9 +39,9 @@ const navboxList = navboxRefs
     return { ...match, title: ref.title || match.title };
   })
   .filter(Boolean);
-const infoboxConfig = infoboxes.find((cfg) => cfg.type === article.type) || null;
+const infoboxConfig = article ? infoboxes.find((cfg) => cfg.type === article.type) || null : null;
 const layerHtml = {};
-if (article.layers) {
+if (article && article.layers) {
   for (const [layer, body] of Object.entries(article.layers)) {
     layerHtml[layer] = marked.parse(body);
   }
@@ -52,19 +61,37 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
 ---
 
 <BaseLayout
-  title={article.title}
-  layer={article.default_layer}
-  breadcrumbs={[
+  title={article ? article.title : `Missing: ${placeholder.slug}`}
+  layer={article ? article.default_layer : "default"}
+  breadcrumbs={article ? [
     { href: "/", label: "Home" },
     { href: `/wiki/${article.slug}/`, label: article.title }
+  ] : [
+    { href: "/", label: "Home" },
+    { href: `/wiki/${placeholder.slug}/`, label: placeholder.slug }
   ]}
 >
     <main class="wiki">
+      {!article && placeholder && (
+        <section>
+          <h1>Missing page: {placeholder.slug}</h1>
+          <p>Oops! This page does not exist yet.</p>
+          <p>{placeholder.description}</p>
+          <h2>Backlinks</h2>
+          <ul>
+            {placeholder.backlinks.map((slug) => (
+              <li><a href={`/wiki/${slug}/`}>{slug}</a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {article && (
       <section class="wiki__content">
         <h1>{article.title}</h1>
         <p><strong>Type:</strong> {article.type}</p>
         <article id="layer-body" data-pagefind-body set:html={html} />
       </section>
+      )}
       <aside class="wiki__aside">
         {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
         {showLayers && (
