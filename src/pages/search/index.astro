@@ -24,6 +24,15 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       <option value={t}>{t}</option>
     ))}
   </select>
+  <style>
+    #results span {
+      font-size: 0.85em;
+      padding: 0.1em 0.4em;
+      border: 1px solid #666;
+      border-radius: 4px;
+      margin-right: 0.4em;
+    }
+  </style>
   <div id="results"></div>
 
   <script type="module">
@@ -84,6 +93,10 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         results.innerHTML = "<p>No results found.</p>";
         return;
       }
+
+      const count = document.createElement("p");
+      count.textContent = `${filtered.length} result(s)`;
+      results.appendChild(count);
 
       for (const { item, record } of filtered) {
         const el = document.createElement("div");
