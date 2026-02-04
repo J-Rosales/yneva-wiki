@@ -22,6 +22,8 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: infobox field renderers for date, list, slug, and image types.
   - Implemented: layer toggle UI with client-side switching.
   - Implemented: full layout scaffold with sidebar, breadcrumbs, and responsive columns.
+  - Implemented: infobox placement stacks above content on mobile and placeholder banner styling.
+  - Implemented: related content placeholder list.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
   - Implemented: link extraction from default layer, basic link graph JSON.

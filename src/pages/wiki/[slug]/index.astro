@@ -74,7 +74,7 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
 >
     <main class="wiki">
       {!article && placeholder && (
-        <section>
+        <section class="placeholder-banner">
           <h1>Missing page: {placeholder.slug}</h1>
           <p>Oops! This page does not exist yet.</p>
           <p>{placeholder.description}</p>
@@ -128,6 +128,12 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           ))}
         </section>
       )}
+      <section>
+        <h2>Related content</h2>
+        <ul>
+          <li>Related items will appear here.</li>
+        </ul>
+      </section>
     </main>
   <style>
     .wiki {
@@ -138,9 +144,17 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
     .wiki__aside {
       align-self: start;
     }
+    .placeholder-banner {
+      border: 1px solid #c00;
+      padding: 0.75rem;
+      background: #fff3f3;
+    }
     @media (max-width: 900px) {
       .wiki {
         grid-template-columns: 1fr;
+      }
+      .wiki__aside {
+        order: -1;
       }
     }
   </style>
