@@ -3,6 +3,7 @@ import articles from "../../../../build/articles.json" assert { type: "json" };
 import placeholders from "../../../../build/placeholders.json" assert { type: "json" };
 import { marked } from "marked";
 import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
+import dynasties from "../../../../build/dynasties.json" assert { type: "json" };
 import relatedContent from "../../../../build/related-content.json" assert { type: "json" };
 import Navbox from "../../../components/Navbox.astro";
 import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
@@ -33,6 +34,7 @@ if (!article && placeholder) {
 }
 const html = article ? marked.parse(article.body) : "";
 const rels = article ? genealogy[article.slug] || null : null;
+const dynastyData = article ? dynasties[article.slug] || null : null;
 const showLayers = article ? article.available_layers && article.available_layers.length > 1 : false;
 const articlesBySlug = new Set(articles.map((a) => a.slug));
 const articleTitleBySlug = new Map(articles.map((a) => [a.slug, a.title]));
@@ -69,6 +71,10 @@ const childChildren =
 
 const extendedParents = unique(parentParents).filter((s) => !rels?.parents?.includes(s));
 const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.includes(s));
+const dynastyMembers = dynastyData?.members || [];
+const dynastyFounder = dynastyData?.founder || null;
+const dynastyParent = dynastyData?.parent_house || null;
+const dynastyChildren = dynastyData?.child_houses || [];
 ---
 
 <BaseLayout
@@ -146,6 +152,26 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           <p><strong>House:</strong> {rels.house || "None"}</p>
           <p><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</p>
           <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
+        </section>
+      )}
+      {article && article.type === "dynasty" && dynastyData && !isDisambiguation && (
+        <section>
+          <h2>Dynasty</h2>
+          <p><strong>Founder:</strong> {dynastyFounder || "None"}</p>
+          <p><strong>Parent House:</strong> {dynastyParent || "None"}</p>
+          <p><strong>Child Houses:</strong> {dynastyChildren.join(", ") || "None"}</p>
+          <h3>Members</h3>
+          {dynastyMembers.length === 0 ? (
+            <p>None listed.</p>
+          ) : (
+            <ul>
+              {dynastyMembers.map((slug) => (
+                <li>
+                  <a href={`/wiki/${slug}/`}>{articleTitleBySlug.get(slug) || `Missing: ${slug}`}</a>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
       {rels && !isDisambiguation && (

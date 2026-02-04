@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -105,7 +106,7 @@ def _read_article(path: Path) -> Article:
     )
 
 
-def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
+def build(wiki_root: Path, out_dir: Path, write_outputs: bool = True) -> dict[str, Any]:
     articles: list[Article] = []
     slugs: set[str] = set()
     redirects: dict[str, str] = {}
@@ -344,31 +345,32 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
 
         related[slug] = candidates[:5]
 
-    out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "articles.json").write_text(
-        json.dumps([asdict(article) for article in articles], indent=2),
-        encoding="utf-8",
-    )
-    (out_dir / "link-graph.json").write_text(
-        json.dumps(link_graph, indent=2),
-        encoding="utf-8",
-    )
-    (out_dir / "redirects.json").write_text(
-        json.dumps(redirects, indent=2),
-        encoding="utf-8",
-    )
-    (out_dir / "placeholders.json").write_text(
-        json.dumps(placeholders, indent=2),
-        encoding="utf-8",
-    )
-    (out_dir / "related-content.json").write_text(
-        json.dumps(related, indent=2),
-        encoding="utf-8",
-    )
-    (out_dir / "facets.json").write_text(
-        json.dumps(facets, indent=2),
-        encoding="utf-8",
-    )
+    if write_outputs:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "articles.json").write_text(
+            json.dumps([asdict(article) for article in articles], indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "link-graph.json").write_text(
+            json.dumps(link_graph, indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "redirects.json").write_text(
+            json.dumps(redirects, indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "placeholders.json").write_text(
+            json.dumps(placeholders, indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "related-content.json").write_text(
+            json.dumps(related, indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "facets.json").write_text(
+            json.dumps(facets, indent=2),
+            encoding="utf-8",
+        )
 
     # Navboxes (YAML in data/navboxes)
     navbox_dir = Path(__file__).resolve().parents[2] / "data" / "navboxes"
@@ -378,13 +380,16 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
             data = yaml_loads(path.read_text(encoding="utf-8"))
             if data:
                 navboxes.append(data)
-    (out_dir / "navboxes.json").write_text(
-        json.dumps(navboxes, indent=2),
-        encoding="utf-8",
-    )
+    if write_outputs:
+        (out_dir / "navboxes.json").write_text(
+            json.dumps(navboxes, indent=2),
+            encoding="utf-8",
+        )
 
     # Genealogy
     genealogy: dict[str, dict[str, Any]] = {}
+    dynasty_graph: dict[str, dict[str, Any]] = {}
+    warnings: list[str] = []
     slug_to_type = {a.slug: a.type for a in articles}
 
     def _as_list(value: Any) -> list[str]:
@@ -430,17 +435,17 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
             if slug_to_type[rels["house"]] != "dynasty":
                 raise BuildError(f"Genealogy: house {rels['house']} is not a dynasty for {person}")
 
-    # Reciprocal validation
+    # Reciprocal validation (warnings for one-sided links)
     for person, rels in genealogy.items():
         for parent in rels["parents"]:
             if person not in genealogy.get(parent, {}).get("children", []):
-                raise BuildError(f"Genealogy: missing reciprocal child link {parent} -> {person}")
+                warnings.append(f"Genealogy warning: missing reciprocal child link {parent} -> {person}")
         for child in rels["children"]:
             if person not in genealogy.get(child, {}).get("parents", []):
-                raise BuildError(f"Genealogy: missing reciprocal parent link {child} -> {person}")
+                warnings.append(f"Genealogy warning: missing reciprocal parent link {child} -> {person}")
         for spouse in rels["spouses"]:
             if person not in genealogy.get(spouse, {}).get("spouses", []):
-                raise BuildError(f"Genealogy: missing reciprocal spouse link {spouse} -> {person}")
+                warnings.append(f"Genealogy warning: missing reciprocal spouse link {spouse} -> {person}")
 
     # Parent/child cycle detection
     graph = {p: rels["children"] for p, rels in genealogy.items()}
@@ -461,12 +466,63 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     for person in genealogy.keys():
         _dfs(person)
 
-    (out_dir / "genealogy.json").write_text(
-        json.dumps(genealogy, indent=2),
-        encoding="utf-8",
-    )
+    # Dynasty graph
+    for article in articles:
+        if article.type != "dynasty":
+            continue
+        fm = article.frontmatter
+        members = _as_list(fm.get("members"))
+        founder = fm.get("founder")
+        founder_slug = founder.strip().lower() if isinstance(founder, str) and founder.strip() else None
+        parent_house = fm.get("parent_house")
+        parent_slug = parent_house.strip().lower() if isinstance(parent_house, str) and parent_house.strip() else None
+        child_houses = _as_list(fm.get("child_houses"))
 
-    return {
+        if founder_slug:
+            if founder_slug not in slug_to_type:
+                raise BuildError(f"Genealogy: missing founder {founder_slug} for dynasty {article.slug}")
+            if slug_to_type[founder_slug] != "person":
+                raise BuildError(f"Genealogy: founder {founder_slug} is not a person for dynasty {article.slug}")
+
+        for member in members:
+            if member not in slug_to_type:
+                raise BuildError(f"Genealogy: missing member {member} for dynasty {article.slug}")
+            if slug_to_type[member] != "person":
+                raise BuildError(f"Genealogy: member {member} is not a person for dynasty {article.slug}")
+
+        if parent_slug:
+            if parent_slug not in slug_to_type:
+                raise BuildError(f"Genealogy: missing parent_house {parent_slug} for dynasty {article.slug}")
+            if slug_to_type[parent_slug] != "dynasty":
+                raise BuildError(f"Genealogy: parent_house {parent_slug} is not a dynasty for {article.slug}")
+
+        for child in child_houses:
+            if child not in slug_to_type:
+                raise BuildError(f"Genealogy: missing child_house {child} for dynasty {article.slug}")
+            if slug_to_type[child] != "dynasty":
+                raise BuildError(f"Genealogy: child_house {child} is not a dynasty for {article.slug}")
+
+        dynasty_graph[article.slug] = {
+            "members": members,
+            "founder": founder_slug,
+            "parent_house": parent_slug,
+            "child_houses": child_houses,
+        }
+
+    if write_outputs:
+        (out_dir / "genealogy.json").write_text(
+            json.dumps(genealogy, indent=2),
+            encoding="utf-8",
+        )
+        (out_dir / "dynasties.json").write_text(
+            json.dumps(dynasty_graph, indent=2),
+            encoding="utf-8",
+        )
+
+    if warnings:
+        print("\n".join(warnings), file=sys.stderr)
+
+    result = {
         "articles": len(articles),
         "link_graph_nodes": len(link_graph),
         "redirects": len(redirects),
@@ -474,15 +530,29 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         "facets": len(facets),
         "genealogy": len(genealogy),
         "navboxes": len(navboxes),
+        "dynasties": len(dynasty_graph),
         "output": str(out_dir),
     }
+    if write_outputs:
+        sitemap_entries = [
+            f"/wiki/{a.slug}/"
+            for a in articles
+            if a.slug not in placeholders and a.slug not in redirects
+        ]
+        (out_dir / "sitemap.json").write_text(
+            json.dumps({"urls": ["/"] + sitemap_entries}, indent=2),
+            encoding="utf-8",
+        )
+    return result
 
 
 def main() -> None:
     root = Path(__file__).resolve().parents[2]
     wiki_root = root / "wiki"
     out_dir = root / "build"
-    result = build(wiki_root, out_dir)
+    args = sys.argv[1:]
+    validate_only = "--validate" in args
+    result = build(wiki_root, out_dir, write_outputs=not validate_only)
     print(json.dumps(result, indent=2))
 
 

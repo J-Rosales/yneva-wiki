@@ -49,10 +49,13 @@ This document tracks the current implementation status relative to the starter-k
 - **Genealogy (06_genealogy.md)**: Not implemented
   - Implemented: genealogy JSON graph output with strict validation for person relationships and basic UI summary.
   - Implemented: interactive tree UI (HTML + SVG) with lazy load.
+  - Implemented: dynasty membership graph and dynasty page display.
+  - Implemented: one-sided relationship warnings (non-fatal).
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
-  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, `genealogy.json`, `navboxes.json`, `related-content.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
-  - Pending: facets and genealogy artifacts and validation expansion.
+  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, `genealogy.json`, `navboxes.json`, `related-content.json`, `dynasties.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
+  - Implemented: validation-only mode via `--validate`.
+  - Implemented: `sitemap.json` build artifact.
 
 - **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Not started
   - Pending: phased implementation of MVP features.
