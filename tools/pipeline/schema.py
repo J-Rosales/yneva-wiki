@@ -111,7 +111,11 @@ def _type_required_fields(article_type: str) -> list[str]:
     required = []
     required += CORE_FIELDS["core_identity"]
     required += CORE_FIELDS["core_summary"]
-    required += TYPE_TIME_FIELDS.get(article_type, [])
+    # Artifact requires at least one of created/discovered.
+    if article_type == "artifact":
+        required += ["created|discovered"]
+    else:
+        required += TYPE_TIME_FIELDS.get(article_type, [])
     required += TYPE_PLACE_FIELDS.get(article_type, [])
     required += TYPE_PEOPLE_FIELDS.get(article_type, [])
     required += TYPE_MEDIA_FIELDS.get(article_type, [])
@@ -171,6 +175,12 @@ def validate_schema(article_type: str, frontmatter: dict[str, Any]) -> list[str]
 
     fm = apply_name_mapping(frontmatter)
     for field in rule.required:
+        if field == "created|discovered":
+            created = fm.get("created")
+            discovered = fm.get("discovered")
+            if (created in (None, "")) and (discovered in (None, "")):
+                errors.append("Missing required field 'created' or 'discovered' for type 'artifact'")
+            continue
         value = fm.get(field)
         if field in ALLOW_UNKNOWN_FIELDS:
             if value in (None, "", "unknown", "none"):
