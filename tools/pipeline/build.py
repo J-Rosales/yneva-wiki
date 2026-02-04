@@ -475,7 +475,11 @@ def build(wiki_root: Path, out_dir: Path, write_outputs: bool = True) -> dict[st
         founder = fm.get("founder")
         founder_slug = founder.strip().lower() if isinstance(founder, str) and founder.strip() else None
         parent_house = fm.get("parent_house")
-        parent_slug = parent_house.strip().lower() if isinstance(parent_house, str) and parent_house.strip() else None
+        parent_slug = None
+        if isinstance(parent_house, str):
+            raw_parent = parent_house.strip().lower()
+            if raw_parent and raw_parent not in ("none", "unknown"):
+                parent_slug = raw_parent
         child_houses = _as_list(fm.get("child_houses"))
 
         if founder_slug:
