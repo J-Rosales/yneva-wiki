@@ -1,0 +1,70 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Era
+  namespace: 0
+  lang: en
+  slug: Example_Era
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: era_v1
+  params:
+    name: ''
+    image: ''
+    caption: ''
+    start: ''
+    end: ''
+    timeframe: ''
+    usage: ''
+    region: ''
+    world: ''
+    map: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: definition
+  heading: Definition
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: chronology
+  heading: Chronology
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: usage
+  heading: Usage
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end

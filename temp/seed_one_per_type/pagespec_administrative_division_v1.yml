@@ -1,0 +1,82 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Administrative Division
+  namespace: 0
+  lang: en
+  slug: Example_Administrative_Division
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: administrative_division_v1
+  params:
+    name: ''
+    image: ''
+    caption: ''
+    division_type: ''
+    country: ''
+    polity: ''
+    parent_division: ''
+    capital: ''
+    seat: ''
+    coordinates: ''
+    map: ''
+    established: ''
+    abolished: ''
+    area: ''
+    population: ''
+    official_languages: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: status
+  heading: Status and role
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: history
+  heading: History
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: administration
+  heading: Administration
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: geography
+  heading: Geography
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end

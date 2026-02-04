@@ -1,0 +1,75 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Law
+  namespace: 0
+  lang: en
+  slug: Example_Law
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: law_v1
+  params:
+    name: ''
+    jurisdiction: ''
+    enacted: ''
+    effective: ''
+    status: ''
+    legislative_body: ''
+    subject: ''
+    text: ''
+    repealed: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: background
+  heading: Background
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: provisions
+  heading: Provisions
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: history
+  heading: Legislative history
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: impact
+  heading: Impact
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end

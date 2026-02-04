@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask Me About It Clarifier"
+  short_description: "Expand phases into steps and ask A-or-B clarifying questions when user says ask me about it."
+  default_prompt: "When a user says ask me about it while listing phases, steps, or milestones, break each item into implementation steps, ask A-or-B clarifying questions, ask more for larger scope, then structure the resolved steps as a Codex task list and begin work."

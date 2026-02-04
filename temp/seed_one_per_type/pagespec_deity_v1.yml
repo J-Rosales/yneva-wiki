@@ -1,0 +1,80 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Deity
+  namespace: 0
+  lang: en
+  slug: Example_Deity
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: deity_v1
+  params:
+    name: ''
+    image: ''
+    caption: ''
+    culture: ''
+    pantheon: ''
+    domains: ''
+    symbols: ''
+    parents: ''
+    consort: ''
+    offspring: ''
+    equivalents: ''
+    gender: ''
+    texts: ''
+    temples: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: identity
+  heading: Identity
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: mythology
+  heading: Mythology
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: worship
+  heading: Worship
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: iconography
+  heading: Iconography
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end

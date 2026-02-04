@@ -1,0 +1,76 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Scientific Theory
+  namespace: 0
+  lang: en
+  slug: Example_Scientific_Theory
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: scientific_theory_v1
+  params:
+    name: ''
+    field: ''
+    proposed_by: ''
+    year_proposed: ''
+    statement: ''
+    evidence: ''
+    status: ''
+    superseded_by: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: statement
+  heading: Statement
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: background
+  heading: Background
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: evidence
+  heading: Evidence
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: reception
+  heading: Reception
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end
+infobox_params:
+- key_publications

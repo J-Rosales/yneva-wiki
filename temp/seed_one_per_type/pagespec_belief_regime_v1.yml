@@ -1,0 +1,80 @@
+pagespec_version: 1
+page:
+  title: Sandbox:Example Belief Regime
+  namespace: 0
+  lang: en
+  slug: Example_Belief_Regime
+  summary_style: standard
+  redirects: []
+  categories: []
+  sort_key: ''
+infobox:
+  key: belief_regime_v1
+  params:
+    name: ''
+    image: ''
+    caption: ''
+    classification: ''
+    core_paradigms: ''
+    founder: ''
+    origin: ''
+    period: ''
+    practices: ''
+    ethics: ''
+    eschatology: ''
+  spouses: []
+  issue_list: []
+  titles: []
+  reigns: []
+sections:
+- id: lead
+  heading: null
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+- id: core_paradigms
+  heading: Core beliefs
+  status: mandatory
+  blocks:
+  - type: paragraph
+    text: ''
+  label: Core paradigms
+- id: history
+  heading: History
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: variants
+  heading: Variants
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: practice
+  heading: Practice
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+- id: legacy
+  heading: Legacy
+  status: optional
+  blocks:
+  - type: paragraph
+    text: ''
+references:
+  mode: inline
+  items: []
+page_tail:
+  see_also: []
+  external_links: []
+  navboxes: []
+  authority_control: false
+render_options:
+  toc: auto
+  reflist_template_key: reflist_v1
+  category_rendering: end
+infobox_params:
+- texts
