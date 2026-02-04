@@ -6,6 +6,8 @@ import Infobox from "../../../../components/Infobox.astro";
 import infoboxes from "../../../../../data/infoboxes/index.json" assert { type: "json" };
 import LayerToggle from "../../../../components/LayerToggle.astro";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import CategoryTags from "../../../../components/CategoryTags.astro";
+import MetadataFooter from "../../../../components/MetadataFooter.astro";
 
 export function getStaticPaths() {
   const paths = [];
@@ -50,7 +52,9 @@ if (article.layers) {
       <section class="wiki__content">
         <h1>{article.title}</h1>
         <p><strong>Type:</strong> {article.type}</p>
+        <CategoryTags tags={article.frontmatter?.tags} />
         <article id="layer-body" data-pagefind-body set:html={html} />
+        <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
       </section>
       <aside class="wiki__aside">
         {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}

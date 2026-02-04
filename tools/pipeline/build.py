@@ -14,7 +14,7 @@ from .schema import validate_schema
 from .yaml_min import loads as yaml_loads
 
 
-ALLOWED_INFOBOX_FIELD_TYPES = {"text", "date", "slug", "list", "image"}
+ALLOWED_INFOBOX_FIELD_TYPES = {"text", "date", "slug", "list", "image", "number", "boolean"}
 
 
 class BuildError(Exception):
@@ -79,6 +79,16 @@ def _read_article(path: Path) -> Article:
         raise BuildError(f"{path}: " + "; ".join(schema_errors))
 
     links = extract_links(default_content)
+    outgoing = [link.slug for link in links]
+    if type_value == "disambiguation":
+        entries = fm.data.get("disambiguation_entries") or []
+        if not isinstance(entries, list) or not all(isinstance(e, str) and e.strip() for e in entries):
+            raise BuildError(f"{path}: disambiguation_entries must be a list of slugs")
+        outgoing = []
+        for entry in entries:
+            slug_value = entry.strip().lower()
+            _validate_slug(slug_value)
+            outgoing.append(slug_value)
 
     return Article(
         path=str(path),
@@ -91,7 +101,7 @@ def _read_article(path: Path) -> Article:
         layers=layers.layer_contents,
         default_layer=default_layer,
         available_layers=layers.available_layers,
-        outgoing=[link.slug for link in links],
+        outgoing=outgoing,
     )
 
 
@@ -135,21 +145,28 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         if article.slug in slugs:
             raise BuildError(f"Duplicate slug detected: {article.slug}")
         slugs.add(article.slug)
-        if article.type not in infobox_configs:
-            raise BuildError(f"{path}: missing infobox config for type '{article.type}'")
-        # Validate frontmatter types against infobox config
-        for field in infobox_configs[article.type].get("fields", []):
-            key = field["key"]
-            ftype = field["type"]
-            value = article.frontmatter.get(key)
-            if value is None or value == "":
-                continue
-            if ftype == "list":
-                if not isinstance(value, list) and not isinstance(value, str):
-                    raise BuildError(f"{path}: field '{key}' must be list or string")
-            elif ftype in ("text", "slug", "image", "date"):
-                if not isinstance(value, (str, int)):
-                    raise BuildError(f"{path}: field '{key}' must be string or number")
+        if article.type != "disambiguation":
+            if article.type not in infobox_configs:
+                raise BuildError(f"{path}: missing infobox config for type '{article.type}'")
+            # Validate frontmatter types against infobox config
+            for field in infobox_configs[article.type].get("fields", []):
+                key = field["key"]
+                ftype = field["type"]
+                value = article.frontmatter.get(key)
+                if value is None or value == "":
+                    continue
+                if ftype == "list":
+                    if not isinstance(value, list) and not isinstance(value, str):
+                        raise BuildError(f"{path}: field '{key}' must be list or string")
+                elif ftype in ("text", "slug", "image", "date"):
+                    if not isinstance(value, (str, int)):
+                        raise BuildError(f"{path}: field '{key}' must be string or number")
+                elif ftype == "number":
+                    if not isinstance(value, (int, float, str)):
+                        raise BuildError(f"{path}: field '{key}' must be number or string")
+                elif ftype == "boolean":
+                    if not isinstance(value, (bool, str, int)):
+                        raise BuildError(f"{path}: field '{key}' must be boolean or string")
         for alt in article.frontmatter.get("redirects", []) or []:
             if not isinstance(alt, str) or not alt.strip():
                 raise BuildError(f"{path}: invalid redirect entry")
@@ -159,14 +176,34 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
             redirects[alt_slug] = article.slug
         articles.append(article)
 
-    link_graph: dict[str, dict[str, list[str]]] = {}
+    link_graph: dict[str, dict[str, list[str] | str | list[str]]] = {}
+    tags_by_slug: dict[str, list[str]] = {}
+    navboxes_by_slug: dict[str, list[str]] = {}
+    type_by_slug: dict[str, str] = {}
     for article in articles:
         resolved_outgoing: list[str] = []
         for slug in article.outgoing:
-            resolved_outgoing.append(redirects.get(slug, slug))
+            resolved = redirects.get(slug, slug)
+            if resolved == article.slug:
+                continue
+            resolved_outgoing.append(resolved)
+        tags = article.frontmatter.get("tags", [])
+        tag_list = [str(t).strip().lower() for t in tags if str(t).strip()] if isinstance(tags, list) else []
+        navbox_refs = article.frontmatter.get("navboxes", []) or []
+        navbox_ids = []
+        if isinstance(navbox_refs, list):
+            for ref in navbox_refs:
+                if isinstance(ref, dict) and isinstance(ref.get("id"), str):
+                    navbox_ids.append(ref["id"])
+        tags_by_slug[article.slug] = tag_list
+        navboxes_by_slug[article.slug] = navbox_ids
+        type_by_slug[article.slug] = article.type
         link_graph[article.slug] = {
             "outgoing": sorted(set(resolved_outgoing)),
             "incoming": [],
+            "tags": tag_list,
+            "type": article.type,
+            "navboxes": navbox_ids,
         }
 
     for article in articles:
@@ -208,6 +245,8 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         # Exclude redirects and placeholders from facets; use canonical slug only.
         if article.slug in redirects:
             continue
+        if article.type == "disambiguation":
+            continue
         birth_year = None
         death_year = None
         if article.type == "person":
@@ -244,6 +283,67 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     for entry in placeholders.values():
         entry["backlinks"] = sorted(set(entry["backlinks"]))
 
+    related: dict[str, list[str]] = {}
+    disambiguation_slugs = {a.slug for a in articles if a.type == "disambiguation"}
+    slugs_list = [a.slug for a in articles if a.slug not in disambiguation_slugs]
+    slug_set = set(slugs_list)
+
+    def _dedupe(items: list[str]) -> list[str]:
+        seen: set[str] = set()
+        out: list[str] = []
+        for item in items:
+            if item in seen:
+                continue
+            seen.add(item)
+            out.append(item)
+        return out
+
+    for article in articles:
+        slug = article.slug
+        if slug in redirects:
+            continue
+        if slug in disambiguation_slugs:
+            related[slug] = []
+            continue
+        outgoing = [s for s in link_graph[slug]["outgoing"] if s in slug_set]
+        incoming = [s for s in link_graph[slug]["incoming"] if s in slug_set]
+        navbox_matches: list[str] = []
+        if navboxes_by_slug.get(slug):
+            target_boxes = set(navboxes_by_slug[slug])
+            for other in slugs_list:
+                if other == slug:
+                    continue
+                if target_boxes.intersection(navboxes_by_slug.get(other, [])):
+                    navbox_matches.append(other)
+        tag_matches: list[str] = []
+        if tags_by_slug.get(slug):
+            target_tags = set(tags_by_slug[slug])
+            for other in slugs_list:
+                if other == slug:
+                    continue
+                if target_tags.intersection(tags_by_slug.get(other, [])):
+                    tag_matches.append(other)
+        type_matches = [s for s in slugs_list if s != slug and type_by_slug.get(s) == article.type]
+
+        candidates = _dedupe(outgoing)
+        if len(candidates) < 3:
+            candidates = _dedupe(candidates + navbox_matches)
+        if len(candidates) < 3:
+            candidates = _dedupe(candidates + tag_matches)
+        if len(candidates) < 3:
+            candidates = _dedupe(candidates + type_matches)
+        if len(candidates) < 3:
+            candidates = _dedupe(candidates + incoming)
+
+        candidates = [s for s in candidates if s != slug]
+        if not candidates:
+            missing = [
+                s for s in link_graph[slug]["outgoing"] if s not in slug_set
+            ]
+            candidates = _dedupe(missing)
+
+        related[slug] = candidates[:5]
+
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "articles.json").write_text(
         json.dumps([asdict(article) for article in articles], indent=2),
@@ -259,6 +359,10 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     )
     (out_dir / "placeholders.json").write_text(
         json.dumps(placeholders, indent=2),
+        encoding="utf-8",
+    )
+    (out_dir / "related-content.json").write_text(
+        json.dumps(related, indent=2),
         encoding="utf-8",
     )
     (out_dir / "facets.json").write_text(

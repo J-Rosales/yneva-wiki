@@ -1,0 +1,25 @@
+---
+const { type, frontmatter } = Astro.props;
+const updated =
+  frontmatter?.updated ||
+  frontmatter?.last_updated ||
+  frontmatter?.lastUpdated ||
+  "Unknown";
+---
+
+<footer class="meta">
+  <span><strong>Type:</strong> {type}</span>
+  <span><strong>Last updated:</strong> {updated}</span>
+</footer>
+
+<style>
+  .meta {
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #ccc;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+  }
+</style>

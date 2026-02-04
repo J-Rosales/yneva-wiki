@@ -16,6 +16,18 @@ function renderValue(field) {
   if (field.type === "date") {
     return formatDate(value);
   }
+  if (field.type === "number") {
+    const numberValue = typeof value === "number" ? value : Number(value);
+    if (Number.isNaN(numberValue)) return String(value);
+    return new Intl.NumberFormat().format(numberValue);
+  }
+  if (field.type === "boolean") {
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    const raw = String(value).trim().toLowerCase();
+    if (raw === "true" || raw === "yes" || raw === "1") return "Yes";
+    if (raw === "false" || raw === "no" || raw === "0") return "No";
+    return String(value);
+  }
   if (field.type === "slug") {
     const label = frontmatter[`${field.key}_label`];
     const text = label || value;

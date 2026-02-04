@@ -14,21 +14,27 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: layer route rendering with `/wiki/<slug>/<layer>/`.
   - Implemented: placeholder pages at `/wiki/<slug>/` with missing-page messaging.
   - Implemented: canonical tags and noindex on layer routes.
+  - Implemented: disambiguation page layout using `type: disambiguation`.
+  - Implemented: sitemap generation via Astro route (`/sitemap.xml`).
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
   - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
   - Implemented: navbox rendering component and frontmatter hooks.
   - Implemented: generic infobox renderer with type config.
   - Implemented: infobox field renderers for date, list, slug, and image types.
+  - Implemented: infobox field renderers for number and boolean types.
   - Implemented: layer toggle UI with client-side switching.
   - Implemented: full layout scaffold with sidebar, breadcrumbs, and responsive columns.
   - Implemented: infobox placement stacks above content on mobile and placeholder banner styling.
-  - Implemented: related content placeholder list.
+  - Implemented: related content component rendering.
+  - Implemented: category tags component under titles.
+  - Implemented: metadata footer component.
+  - Implemented: disambiguation list rendering.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
   - Implemented: link extraction from default layer, basic link graph JSON.
   - Implemented: placeholder listing output (`placeholders.json`).
-  - Pending: related-content scoring.
+  - Implemented: related-content scoring with tiered fallback and max 5 suggestions.
 
 - **Search and filters (05_search_and_filters.md)**: Not implemented
   - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold with type and tag filtering.
@@ -36,14 +42,16 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: basic result count and type badge styling.
   - Implemented: excerpt truncation and improved empty state messaging.
   - Implemented: layer filter in search UI.
-  - Pending: full search UI and result presentation enhancements.
+  - Implemented: disambiguation results excluded from search output.
+  - Implemented: title match boost for ranking.
+  - Implemented: compact result list layout retained.
 
 - **Genealogy (06_genealogy.md)**: Not implemented
   - Implemented: genealogy JSON graph output with strict validation for person relationships and basic UI summary.
   - Implemented: interactive tree UI (HTML + SVG) with lazy load.
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
-  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, `genealogy.json`, `navboxes.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
+  - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, `genealogy.json`, `navboxes.json`, `related-content.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).
   - Pending: facets and genealogy artifacts and validation expansion.
 
 - **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Not started

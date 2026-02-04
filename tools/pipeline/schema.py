@@ -148,6 +148,7 @@ SCHEMAS: dict[str, SchemaRule] = {
     "structure": SchemaRule(required=_type_required_fields("structure")),
     "technical_concept": SchemaRule(required=_type_required_fields("technical_concept")),
     "treaty": SchemaRule(required=_type_required_fields("treaty")),
+    "disambiguation": SchemaRule(required=["name", "summary", "disambiguation_entries"]),
 }
 
 

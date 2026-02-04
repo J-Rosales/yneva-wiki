@@ -67,6 +67,7 @@ The following minimal fields are required in addition to the core groups above.
 17. **species**: `name`, `summary`
 18. **treaty**: `name`, `summary`, `parties`
 20. **technical_concept**: `name`, `summary`, `definition`
+21. **disambiguation**: `name`, `summary`, `disambiguation_entries`
 
 ## 7. Extensibility
 
