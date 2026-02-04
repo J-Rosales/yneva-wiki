@@ -51,20 +51,22 @@ The following minimal fields are required in addition to the core groups above.
 2. **artifact**: `name`, `summary`, `current_location`, `created` or `discovered`
 3. **belief_regime**: `name`, `summary`, `rituals`
 4. **book**: `name`, `summary`, `author`, `language`
-5. **character**: `species`
-6. **currency**: `symbol`
-7. **deity**: `mythology`
+5. **character**: `name`, `summary`, `species`
+6. **currency**: `name`, `summary`, `symbol`
+7. **deity**: `name`, `summary`, `mythology`
 8. **settlement**: `name`, `summary`, `location`, `status`
-9. **event**: `participants`
-10. **historical_period**: `preceded_by`, `followed_by` (may be `"none"` or `"unknown"`)
+9. **event**: `name`, `summary`, `participants`
+10. **historical_period**: `name`, `summary`, `preceded_by`, `followed_by` (may be `"none"` or `"unknown"`)
 11. **structure**: `name`, `summary`, `location`, `constructed`
 12. **belief_regime**: `name`, `summary`, `rituals`
 13. **institution**: `name`, `summary`, `location`, `status`
 14. **law**: `name`, `summary`, `enacted`
 14. **military_unit**: `allegiance`
 15. **ordinance**: `issuer`
+16. **historical_region**: `name`, `summary`, `region`
+17. **species**: `name`, `summary`
+18. **treaty**: `name`, `summary`, `parties`
 20. **technical_concept**: `name`, `summary`, `definition`
-21. **treaty**: `parties`
 
 ## 7. Extensibility
 

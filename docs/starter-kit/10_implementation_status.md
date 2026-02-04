@@ -54,6 +54,7 @@ This document tracks the current implementation status relative to the starter-k
   - Expanded required fields for administrative_division, settlement, structure.
   - Expanded required fields for artifact, book, belief_regime, technical_concept.
   - Expanded required fields for institution and law.
+  - Expanded required fields for character, currency, deity, event, historical_period, historical_region, military_unit, ordinance, species, treaty.
 
 ## Local Sample Content
 
