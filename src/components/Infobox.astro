@@ -5,8 +5,8 @@ function formatDate(value) {
   if (value === undefined || value === null || value === "") return null;
   if (typeof value === "number") return String(value);
   const raw = String(value).trim();
-  if (/^\d{4}$/.test(raw)) return raw;
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  if (/^\\d{4}$/.test(raw)) return raw;
+  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(raw)) return raw;
   return raw;
 }
 
@@ -31,7 +31,7 @@ function renderValue(field) {
   if (field.type === "slug") {
     const label = frontmatter[`${field.key}_label`];
     const text = label || value;
-    return `<a href="/wiki/${value}/">${text}</a>`;
+    return `<a href=\"/wiki/${value}/\">${text}</a>`;
   }
   if (field.type === "list") {
     if (Array.isArray(value)) {
@@ -42,27 +42,27 @@ function renderValue(field) {
   }
   if (field.type === "image") {
     const caption = frontmatter[`${field.key}_caption`];
-    const fig = `<figure><img src="/media/${value}" alt="" />${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
+    const fig = `<figure><img src=\"/media/${value}\" alt=\"\" />${
+      caption ? `<figcaption>${caption}</figcaption>` : ""
+    }</figure>`;
     return fig;
   }
   return String(value);
 }
+
+const rows = config.fields
+  .map((field) => {
+    const value = renderValue(field);
+    if (!value) return null;
+    return `<dt>${field.label}</dt><dd>${value}</dd>`;
+  })
+  .filter(Boolean)
+  .join("");
 ---
 
 <aside class="infobox">
   <header class="infobox__title">{config.title}</header>
-  <dl>
-    {config.fields.map((field) => {
-      const value = renderValue(field);
-      if (!value) return null;
-      return (
-        <>
-          <dt>{field.label}</dt>
-          <dd set:html={value} />
-        </>
-      );
-    })}
-  </dl>
+  <dl set:html={rows}></dl>
 </aside>
 
 <style>
