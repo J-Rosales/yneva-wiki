@@ -1,6 +1,7 @@
 ---
 import articles from "../../../../build/articles.json" assert { type: "json" };
 import { marked } from "marked";
+import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -11,6 +12,19 @@ export function getStaticPaths() {
 
 const { article } = Astro.props;
 const html = marked.parse(article.body);
+const rels = genealogy[article.slug] || null;
+
+function unique(list) {
+  return Array.from(new Set(list));
+}
+
+const parentParents =
+  rels?.parents?.flatMap((p) => genealogy[p]?.parents || []) || [];
+const childChildren =
+  rels?.children?.flatMap((c) => genealogy[c]?.children || []) || [];
+
+const extendedParents = unique(parentParents).filter((s) => !rels?.parents?.includes(s));
+const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.includes(s));
 ---
 
 <html lang="en">
@@ -24,6 +38,17 @@ const html = marked.parse(article.body);
       <h1>{article.title}</h1>
       <p><strong>Type:</strong> {article.type}</p>
       <article data-pagefind-body set:html={html} />
+      {rels && (
+        <section>
+          <h2>Genealogy</h2>
+          <p><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</p>
+          <p><strong>Spouses:</strong> {rels.spouses?.join(", ") || "None"}</p>
+          <p><strong>Children:</strong> {rels.children?.join(", ") || "None"}</p>
+          <p><strong>House:</strong> {rels.house || "None"}</p>
+          <p><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</p>
+          <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
+        </section>
+      )}
     </main>
   </body>
 </html>

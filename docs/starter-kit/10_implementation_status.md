@@ -14,7 +14,7 @@ This document tracks the current implementation status relative to the starter-k
   - Pending: layer route handling.
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
-  - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering).
+  - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
   - Pending: infobox, navboxes, layer toggle UI, full layout.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
@@ -25,10 +25,11 @@ This document tracks the current implementation status relative to the starter-k
 - **Search and filters (05_search_and_filters.md)**: Not implemented
   - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold with type and tag filtering.
   - Implemented: Pagefind indexing scoped to article body with URL state for search filters.
+  - Implemented: basic result count and type badge styling.
   - Pending: full search UI and result presentation enhancements.
 
 - **Genealogy (06_genealogy.md)**: Not implemented
-  - Implemented: genealogy JSON graph output with strict validation for person relationships.
+  - Implemented: genealogy JSON graph output with strict validation for person relationships and basic UI summary.
   - Pending: article-level display and interactive tree UI.
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
