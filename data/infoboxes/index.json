@@ -131,5 +131,95 @@
       { "key": "enacted", "label": "Enacted", "type": "date" },
       { "key": "author", "label": "Author", "type": "text" }
     ]
+  },
+  {
+    "type": "character",
+    "title": "Character",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "species", "label": "Species", "type": "text" }
+    ]
+  },
+  {
+    "type": "currency",
+    "title": "Currency",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "symbol", "label": "Symbol", "type": "text" }
+    ]
+  },
+  {
+    "type": "deity",
+    "title": "Deity",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "mythology", "label": "Mythology", "type": "text" }
+    ]
+  },
+  {
+    "type": "event",
+    "title": "Event",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "participants", "label": "Participants", "type": "list" }
+    ]
+  },
+  {
+    "type": "historical_period",
+    "title": "Historical Period",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "preceded_by", "label": "Preceded by", "type": "slug" },
+      { "key": "followed_by", "label": "Followed by", "type": "slug" }
+    ]
+  },
+  {
+    "type": "historical_region",
+    "title": "Historical Region",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "region", "label": "Region", "type": "text" }
+    ]
+  },
+  {
+    "type": "military_unit",
+    "title": "Military Unit",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "allegiance", "label": "Allegiance", "type": "text" }
+    ]
+  },
+  {
+    "type": "ordinance",
+    "title": "Ordinance",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "issuer", "label": "Issuer", "type": "text" }
+    ]
+  },
+  {
+    "type": "species",
+    "title": "Species",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" }
+    ]
+  },
+  {
+    "type": "treaty",
+    "title": "Treaty",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "parties", "label": "Parties", "type": "list" }
+    ]
   }
 ]
