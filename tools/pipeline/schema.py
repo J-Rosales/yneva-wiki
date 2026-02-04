@@ -44,7 +44,7 @@ TYPE_TIME_FIELDS = {
     "belief_regime": [],
     "character": [],
     "structure": ["constructed"],
-    "administrative_division": [],
+    "administrative_division": ["established", "dissolved"],
     "historical_region": [],
 }
 

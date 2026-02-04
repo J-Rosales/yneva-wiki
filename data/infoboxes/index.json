@@ -35,5 +35,40 @@
       { "key": "established", "label": "Established", "type": "date" },
       { "key": "dissolved", "label": "Dissolved", "type": "date" }
     ]
+  },
+  {
+    "type": "administrative_division",
+    "title": "Administrative Division",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "region", "label": "Region", "type": "text" },
+      { "key": "status", "label": "Status", "type": "text" },
+      { "key": "established", "label": "Established", "type": "date" },
+      { "key": "dissolved", "label": "Dissolved", "type": "date" }
+    ]
+  },
+  {
+    "type": "settlement",
+    "title": "Settlement",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "location", "label": "Location", "type": "text" },
+      { "key": "status", "label": "Status", "type": "text" },
+      { "key": "founded", "label": "Founded", "type": "date" },
+      { "key": "founder", "label": "Founder", "type": "text" }
+    ]
+  },
+  {
+    "type": "structure",
+    "title": "Structure",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "location", "label": "Location", "type": "text" },
+      { "key": "constructed", "label": "Constructed", "type": "date" },
+      { "key": "architect", "label": "Architect", "type": "text" }
+    ]
   }
 ]
