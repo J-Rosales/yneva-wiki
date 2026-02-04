@@ -7,6 +7,7 @@ import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
 import infoboxes from "../../../../data/infoboxes/index.json" assert { type: "json" };
 import Infobox from "../../../components/Infobox.astro";
 import LayerToggle from "../../../components/LayerToggle.astro";
+import FamilyTree from "../../../components/FamilyTree.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
@@ -84,6 +85,12 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           <p><strong>House:</strong> {rels.house || "None"}</p>
           <p><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</p>
           <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
+        </section>
+      )}
+      {rels && (
+        <section>
+          <h2>Family Tree</h2>
+          <FamilyTree slug={article.slug} />
         </section>
       )}
       {navboxList.length > 0 && (

@@ -34,7 +34,7 @@ This document tracks the current implementation status relative to the starter-k
 
 - **Genealogy (06_genealogy.md)**: Not implemented
   - Implemented: genealogy JSON graph output with strict validation for person relationships and basic UI summary.
-  - Pending: article-level display and interactive tree UI.
+  - Implemented: interactive tree UI (HTML + SVG) with lazy load.
 
 - **Build pipeline and tooling (07_build_pipeline_and_tooling.md)**: Partial
   - Implemented: pipeline outputs `articles.json`, `link-graph.json`, `redirects.json`, `placeholders.json`, `facets.json`, `genealogy.json`, `navboxes.json`, and expanded schema validation (see `11_frontmatter_schemas.md`).

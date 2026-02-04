@@ -1,0 +1,157 @@
+---
+const { slug } = Astro.props;
+---
+
+<div class="family-tree" data-family-tree data-root={slug}>
+  <button type="button" class="family-tree__toggle">Show tree</button>
+  <div class="family-tree__canvas" hidden>
+    <svg class="family-tree__lines"></svg>
+    <div class="family-tree__grid"></div>
+  </div>
+  <script type="module">
+    const rootEl = document.currentScript.closest("[data-family-tree]");
+    const rootSlug = rootEl.getAttribute("data-root");
+    const toggle = rootEl.querySelector(".family-tree__toggle");
+    const canvas = rootEl.querySelector(".family-tree__canvas");
+    const grid = rootEl.querySelector(".family-tree__grid");
+    const svg = rootEl.querySelector(".family-tree__lines");
+
+    function node(label, href) {
+      const el = document.createElement("a");
+      el.className = "family-tree__node";
+      el.textContent = label;
+      el.href = href;
+      return el;
+    }
+
+    function addRow(items) {
+      const row = document.createElement("div");
+      row.className = "family-tree__row";
+      items.forEach((item) => row.appendChild(item));
+      grid.appendChild(row);
+      return row;
+    }
+
+    function clearLines() {
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+    }
+
+    function line(fromEl, toEl) {
+      const from = fromEl.getBoundingClientRect();
+      const to = toEl.getBoundingClientRect();
+      const root = svg.getBoundingClientRect();
+      const x1 = from.left + from.width / 2 - root.left;
+      const y1 = from.bottom - root.top;
+      const x2 = to.left + to.width / 2 - root.left;
+      const y2 = to.top - root.top;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const midY = (y1 + y2) / 2;
+      path.setAttribute("d", `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`);
+      path.setAttribute("stroke", "#444");
+      path.setAttribute("fill", "none");
+      svg.appendChild(path);
+    }
+
+    toggle.addEventListener("click", async () => {
+      if (!canvas.hidden) {
+        canvas.hidden = true;
+        toggle.textContent = "Show tree";
+        return;
+      }
+      const res = await fetch("/genealogy.json");
+      const data = await res.json();
+      const root = data[rootSlug];
+      if (!root) return;
+
+      grid.innerHTML = "";
+      clearLines();
+      canvas.hidden = false;
+      toggle.textContent = "Hide tree";
+
+      const grandparents = new Set();
+      (root.parents || []).forEach((p) => {
+        (data[p]?.parents || []).forEach((gp) => grandparents.add(gp));
+      });
+      const grandparentNodes = Array.from(grandparents).map((s) =>
+        node(s, `/wiki/${s}/`)
+      );
+
+      const parentNodes = (root.parents || []).map((s) => node(s, `/wiki/${s}/`));
+      const spouseNodes = (root.spouses || []).map((s) => node(s, `/wiki/${s}/`));
+      const rootNode = node(rootSlug, `/wiki/${rootSlug}/`);
+
+      const childNodes = (root.children || []).map((s) => node(s, `/wiki/${s}/`));
+      const grandchildSet = new Set();
+      (root.children || []).forEach((c) => {
+        (data[c]?.children || []).forEach((gc) => grandchildSet.add(gc));
+      });
+      const grandchildNodes = Array.from(grandchildSet).map((s) =>
+        node(s, `/wiki/${s}/`)
+      );
+
+      const row0 = addRow(grandparentNodes);
+      const row1 = addRow(parentNodes);
+      const row2 = addRow([rootNode, ...spouseNodes]);
+      const row3 = addRow(childNodes);
+      const row4 = addRow(grandchildNodes);
+
+      requestAnimationFrame(() => {
+        const rows = [row0, row1, row2, row3, row4];
+        const nodes = rows.flatMap((r) => Array.from(r.children));
+        nodes.forEach((n) => (n.style.minWidth = "120px"));
+        if (row1 && row2) {
+          Array.from(row1.children).forEach((p) => line(p, rootNode));
+        }
+        if (row2 && row3) {
+          Array.from(row3.children).forEach((c) => line(rootNode, c));
+        }
+        if (row0 && row1) {
+          Array.from(row0.children).forEach((gp) => {
+            Array.from(row1.children).forEach((p) => line(gp, p));
+          });
+        }
+        if (row3 && row4) {
+          Array.from(row4.children).forEach((gc) => {
+            Array.from(row3.children).forEach((c) => line(c, gc));
+          });
+        }
+      });
+    });
+  </script>
+</div>
+
+<style>
+  .family-tree__toggle {
+    margin-bottom: 0.5rem;
+  }
+  .family-tree__canvas {
+    position: relative;
+    border: 1px solid #666;
+    padding: 1rem;
+  }
+  .family-tree__grid {
+    display: grid;
+    gap: 1rem;
+  }
+  .family-tree__row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .family-tree__node {
+    border: 1px solid #666;
+    padding: 0.25rem 0.5rem;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+  }
+  .family-tree__lines {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+</style>
