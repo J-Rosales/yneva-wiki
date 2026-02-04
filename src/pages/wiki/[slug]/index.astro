@@ -70,6 +70,7 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
     { href: "/", label: "Home" },
     { href: `/wiki/${placeholder.slug}/`, label: placeholder.slug }
   ]}
+  canonicalHref={article ? `/wiki/${article.slug}/` : null}
 >
     <main class="wiki">
       {!article && placeholder && (

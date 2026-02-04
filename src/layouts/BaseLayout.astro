@@ -1,5 +1,5 @@
 ---
-const { title = "Yneva Wiki", layer = "default", breadcrumbs = [] } = Astro.props;
+const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref = null, robots = null } = Astro.props;
 ---
 
 <!doctype html>
@@ -11,6 +11,8 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [] } = Astro.prop
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    {canonicalHref && <link rel="canonical" href={canonicalHref} />}
+    {robots && <meta name="robots" content={robots} />}
   </head>
   <body data-layer={layer}>
     <header class="site-header">

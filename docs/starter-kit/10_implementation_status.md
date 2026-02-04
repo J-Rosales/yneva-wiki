@@ -13,6 +13,7 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: redirect and placeholder route rendering in Astro.
   - Implemented: layer route rendering with `/wiki/<slug>/<layer>/`.
   - Implemented: placeholder pages at `/wiki/<slug>/` with missing-page messaging.
+  - Implemented: canonical tags and noindex on layer routes.
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
   - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
