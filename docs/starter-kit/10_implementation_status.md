@@ -57,8 +57,35 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: validation-only mode via `--validate`.
   - Implemented: `sitemap.json` build artifact.
 
-- **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Not started
-  - Pending: phased implementation of MVP features.
+- **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Partial
+  - Implemented: MVP checklist aligned to current features (see below).
+  - Implemented: phase status summary and notes on current completion.
+
+## MVP Checklist (Derived from 08_mvp_plan_and_iteration.md)
+
+- Implemented: static site generation with Astro.
+- Implemented: Markdown-authored articles in `wiki/`.
+- Implemented: internal wiki link resolution and placeholder pages.
+- Implemented: basic infobox rendering.
+- Implemented: navigation boxes.
+- Implemented: redirect support.
+- Implemented: narrative layers with multiple views and layer toggle.
+- Implemented: search via Pagefind.
+- Pending: confirm layer routes are excluded from sitemap and indexing across all build outputs.
+
+## MVP Phase Status
+
+- Phase 1 – Core Rendering: Implemented
+  - Implemented: article page generation, layout, routing, and internal link handling.
+- Phase 2 – Structured Data: Implemented
+  - Implemented: infobox system, navboxes, metadata rendering.
+- Phase 3 – Search Integration: Implemented
+  - Implemented: Pagefind indexing, search page and UI, basic result display.
+- Phase 4 – Quality and Stability: Implemented
+  - Implemented: redirects, placeholders, and content validation improvements.
+- Phase 5 – Advanced Features: Partial
+  - Implemented: genealogy system and visualization.
+  - Pending: advanced features beyond genealogy per roadmap (timelines, maps, richer faceting).
 
 - **Canonical types (09_canonical_types.md)**: Implemented
   - Defined canonical type list.
