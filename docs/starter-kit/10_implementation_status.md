@@ -18,6 +18,7 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
   - Implemented: navbox rendering component and frontmatter hooks.
   - Implemented: generic infobox renderer with type config.
+  - Implemented: infobox field renderers for date, list, slug, and image types.
   - Implemented: layer toggle UI with client-side switching.
   - Implemented: full layout scaffold with sidebar, breadcrumbs, and responsive columns.
 

@@ -1,11 +1,37 @@
 ---
 const { config, frontmatter } = Astro.props;
 
+function formatDate(value) {
+  if (value === undefined || value === null || value === "") return null;
+  if (typeof value === "number") return String(value);
+  const raw = String(value).trim();
+  if (/^\d{4}$/.test(raw)) return raw;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  return raw;
+}
+
 function renderValue(field) {
   const value = frontmatter[field.key];
   if (value === undefined || value === null || value === "") return null;
+  if (field.type === "date") {
+    return formatDate(value);
+  }
   if (field.type === "slug") {
-    return `<a href="/wiki/${value}/">${value}</a>`;
+    const label = frontmatter[`${field.key}_label`];
+    const text = label || value;
+    return `<a href="/wiki/${value}/">${text}</a>`;
+  }
+  if (field.type === "list") {
+    if (Array.isArray(value)) {
+      const items = value.map((v) => `<li>${v}</li>`).join("");
+      return `<ul>${items}</ul>`;
+    }
+    return `<ul><li>${value}</li></ul>`;
+  }
+  if (field.type === "image") {
+    const caption = frontmatter[`${field.key}_caption`];
+    const fig = `<figure><img src="/media/${value}" alt="" />${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
+    return fig;
   }
   return String(value);
 }
