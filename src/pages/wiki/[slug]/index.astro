@@ -109,7 +109,6 @@ const dynastyChildren = dynastyData?.child_houses || [];
         <p><strong>Type:</strong> {article.type}</p>
         <CategoryTags tags={article.frontmatter?.tags} />
         <article id="layer-body" set:html={html} />
-        <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
       </section>
       )}
       {article && isDisambiguation && (
@@ -191,6 +190,11 @@ const dynastyChildren = dynastyData?.child_houses || [];
         <RelatedContent items={relatedForArticle} titleBySlug={articleTitleBySlug} />
       )}
     </main>
+  <Fragment slot="footer">
+    {article && !isDisambiguation && (
+      <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
+    )}
+  </Fragment>
   <style>
     .wiki {
       display: grid;

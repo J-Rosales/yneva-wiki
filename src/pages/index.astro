@@ -1,7 +1,34 @@
 ---
+import fs from "fs";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import articles from "../../build/articles.json" assert { type: "json" };
+
+const latest = articles
+  .map((article) => {
+    const stats = fs.existsSync(article.path) ? fs.statSync(article.path) : null;
+    const added = stats ? stats.birthtimeMs || stats.mtimeMs : 0;
+    return { ...article, added };
+  })
+  .sort((a, b) => b.added - a.added)
+  .slice(0, 5);
 ---
 
 <BaseLayout title="Yneva Wiki" layer="default">
   <h1>Yneva Wiki</h1>
+  <p>
+    This wiki documents a fictional setting with narrative layers that present
+    different canonical perspectives. The default view is canonical, while
+    alternate layers provide contrasting interpretations of the same events and
+    figures.
+  </p>
+  <h2>Latest Articles</h2>
+  {latest.length === 0 ? (
+    <p>No articles available yet.</p>
+  ) : (
+    <ul>
+      {latest.map((article) => (
+        <li><a href={`/wiki/${article.slug}/`}>{article.title}</a></li>
+      ))}
+    </ul>
+  )}
 </BaseLayout>
