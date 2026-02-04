@@ -24,6 +24,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       <option value={t}>{t}</option>
     ))}
   </select>
+  <select id="layerFilter">
+    <option value="">All layers</option>
+    <option value="solar">solar</option>
+    <option value="academic">academic</option>
+  </select>
   <style>
     #results span {
       font-size: 0.85em;
@@ -40,6 +45,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     const queryInput = document.getElementById("query");
     const typeFilter = document.getElementById("typeFilter");
     const tagFilter = document.getElementById("tagFilter");
+    const layerFilter = document.getElementById("layerFilter");
     const results = document.getElementById("results");
 
     function getUrlState() {
@@ -48,24 +54,27 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         q: params.get("q") || "",
         type: params.get("type") || "",
         tag: params.get("tag") || "",
+        layer: params.get("layer") || "",
       };
     }
 
-    function setUrlState(q, type, tag) {
+    function setUrlState(q, type, tag, layer) {
       const params = new URLSearchParams();
       if (q) params.set("q", q);
       if (type) params.set("type", type);
       if (tag) params.set("tag", tag);
+      if (layer) params.set("layer", layer);
       const next = `${window.location.pathname}?${params.toString()}`;
       history.replaceState(null, "", next);
     }
 
     async function search() {
       const q = queryInput.value.trim();
-      const type = typeFilter.value;
-      const tag = tagFilter.value;
+        const type = typeFilter.value;
+        const tag = tagFilter.value;
+        const layer = layerFilter.value;
       results.innerHTML = "";
-      setUrlState(q, type, tag);
+      setUrlState(q, type, tag, layer);
       if (!q) return;
 
       const pagefind = await import("/pagefind/pagefind.js");
@@ -73,21 +82,24 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       const data = await searchResult.results.map((r) => r.data());
       const items = await Promise.all(data);
 
-      const filtered = items
-        .map((item) => {
-          const slug = item.url.replace("/wiki/", "").replace("/", "");
-          const record = facets.find((f) => f.slug === slug);
-          return { item, record };
-        })
-        .filter(({ record }) => {
-          if (!type) return true;
-          if (type && record?.type !== type) return false;
-          if (tag) {
-            const tags = Array.isArray(record?.tags) ? record.tags : [];
-            if (!tags.includes(tag)) return false;
-          }
-          return true;
-        });
+        const filtered = items
+          .map((item) => {
+            const slug = item.url.replace("/wiki/", "").replace("/", "");
+            const record = facets.find((f) => f.slug === slug);
+            return { item, record };
+          })
+          .filter(({ record }) => {
+            if (!type) return true;
+            if (type && record?.type !== type) return false;
+            if (tag) {
+              const tags = Array.isArray(record?.tags) ? record.tags : [];
+              if (!tags.includes(tag)) return false;
+            }
+            if (layer) {
+              if (!item.url.includes(`/${layer}/`)) return false;
+            }
+            return true;
+          });
 
       if (filtered.length === 0) {
         results.innerHTML = "<p>No results found.</p>";
@@ -109,11 +121,13 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     queryInput.addEventListener("input", search);
     typeFilter.addEventListener("change", search);
     tagFilter.addEventListener("change", search);
+    layerFilter.addEventListener("change", search);
 
     const state = getUrlState();
     if (state.q) queryInput.value = state.q;
     if (state.type) typeFilter.value = state.type;
     if (state.tag) tagFilter.value = state.tag;
+    if (state.layer) layerFilter.value = state.layer;
     if (state.q) search();
   </script>
 

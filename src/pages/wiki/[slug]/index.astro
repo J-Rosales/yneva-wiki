@@ -13,6 +13,7 @@ export function getStaticPaths() {
 const { article } = Astro.props;
 const html = marked.parse(article.body);
 const rels = genealogy[article.slug] || null;
+const showLayers = article.available_layers && article.available_layers.length > 1;
 
 function unique(list) {
   return Array.from(new Set(list));
@@ -37,6 +38,13 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
     <main>
       <h1>{article.title}</h1>
       <p><strong>Type:</strong> {article.type}</p>
+      {showLayers && (
+        <nav>
+          {article.available_layers.map((layer) => (
+            <a href={`/wiki/${article.slug}/${layer}/`}>{layer}</a>
+          ))}
+        </nav>
+      )}
       <article data-pagefind-body set:html={html} />
       {rels && (
         <section>

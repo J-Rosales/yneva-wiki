@@ -17,12 +17,15 @@ class LayerParseResult:
     available_layers: list[str]
     default_layer: str
     default_content: str
+    base_content: str
+    layer_contents: dict[str, str]
 
 
 def parse_layers(content: str, default_layer: str) -> LayerParseResult:
     stack: list[str] = []
     available: set[str] = set()
-    output_lines: list[str] = []
+    base_lines: list[str] = []
+    layer_lines: dict[str, list[str]] = {}
     lines = content.splitlines()
 
     for line in lines:
@@ -34,6 +37,7 @@ def parse_layers(content: str, default_layer: str) -> LayerParseResult:
                 raise LayerParseError(f"Nested layer blocks not allowed: {stack[-1]} inside {layer}")
             stack.append(layer)
             available.add(layer)
+            layer_lines.setdefault(layer, [])
             continue
         if end:
             layer = end.group(1)
@@ -43,17 +47,23 @@ def parse_layers(content: str, default_layer: str) -> LayerParseResult:
             continue
 
         if not stack:
-            output_lines.append(line)
+            base_lines.append(line)
         else:
-            if stack[-1] == default_layer:
-                output_lines.append(line)
+            layer_lines.setdefault(stack[-1], []).append(line)
 
     if stack:
         raise LayerParseError(f"Unclosed layer block: {stack[-1]}")
 
     available.add(default_layer)
+    base_content = "\n".join(base_lines).rstrip() + "\n"
+    layer_contents = {k: ("\n".join(v).rstrip() + "\n") for k, v in layer_lines.items()}
+
+    default_content = layer_contents.get(default_layer, base_content)
+
     return LayerParseResult(
         available_layers=sorted(available),
         default_layer=default_layer,
-        default_content="\n".join(output_lines).rstrip() + "\n",
+        default_content=default_content,
+        base_content=base_content,
+        layer_contents=layer_contents,
     )
