@@ -11,7 +11,7 @@ This document tracks the current implementation status relative to the starter-k
 
 - **Routing and URLs (02_routing_and_urls.md)**: Not implemented
   - Implemented: redirect and placeholder route rendering in Astro.
-  - Pending: layer route handling.
+  - Implemented: layer route rendering with `/wiki/<slug>/<layer>/`.
 
 - **Rendering components (03_rendering_components.md)**: Not implemented
   - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
@@ -26,6 +26,7 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold with type and tag filtering.
   - Implemented: Pagefind indexing scoped to article body with URL state for search filters.
   - Implemented: basic result count and type badge styling.
+  - Implemented: layer filter in search UI.
   - Pending: full search UI and result presentation enhancements.
 
 - **Genealogy (06_genealogy.md)**: Not implemented

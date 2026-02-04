@@ -12,6 +12,8 @@ class Article:
     title: str
     frontmatter: dict[str, Any]
     body: str
+    base_body: str
+    layers: dict[str, str]
     default_layer: str
     available_layers: list[str]
     outgoing: list[str] = field(default_factory=list)

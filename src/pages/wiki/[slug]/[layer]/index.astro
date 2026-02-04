@@ -1,0 +1,57 @@
+---
+import articles from "../../../../../build/articles.json" assert { type: "json" };
+import { marked } from "marked";
+import genealogy from "../../../../../build/genealogy.json" assert { type: "json" };
+
+export function getStaticPaths() {
+  const paths = [];
+  for (const article of articles) {
+    const layers = Object.keys(article.layers || {});
+    for (const layer of layers) {
+      paths.push({
+        params: { slug: article.slug, layer },
+        props: { article, layer },
+      });
+    }
+  }
+  return paths;
+}
+
+const { article, layer } = Astro.props;
+const content = article.layers?.[layer] || article.base_body || article.body;
+const html = marked.parse(content);
+const rels = genealogy[article.slug] || null;
+const showLayers = article.available_layers && article.available_layers.length > 1;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{article.title} ({layer})</title>
+    <link rel="canonical" href={`/wiki/${article.slug}/${layer}/`} />
+  </head>
+  <body>
+    <main>
+      <h1>{article.title}</h1>
+      <p><strong>Type:</strong> {article.type}</p>
+      {showLayers && (
+        <nav>
+          {article.available_layers.map((l) => (
+            <a href={`/wiki/${article.slug}/${l}/`}>{l}</a>
+          ))}
+        </nav>
+      )}
+      <article data-pagefind-body set:html={html} />
+      {rels && (
+        <section>
+          <h2>Genealogy</h2>
+          <p><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</p>
+          <p><strong>Spouses:</strong> {rels.spouses?.join(", ") || "None"}</p>
+          <p><strong>Children:</strong> {rels.children?.join(", ") || "None"}</p>
+          <p><strong>House:</strong> {rels.house || "None"}</p>
+        </section>
+      )}
+    </main>
+  </body>
+</html>

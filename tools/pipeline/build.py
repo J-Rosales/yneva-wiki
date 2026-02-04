@@ -63,11 +63,18 @@ def _read_article(path: Path) -> Article:
     except LayerParseError as exc:
         raise BuildError(f"{path}: {exc}") from exc
 
+    # If multiple layers exist and solar is present, prefer solar as default view.
+    if "solar" in layers.available_layers and "academic" in layers.available_layers:
+        default_layer = "solar"
+        default_content = layers.layer_contents.get("solar", layers.base_content)
+    else:
+        default_content = layers.default_content
+
     schema_errors = validate_schema(type_value, fm.data)
     if schema_errors:
         raise BuildError(f"{path}: " + "; ".join(schema_errors))
 
-    links = extract_links(layers.default_content)
+    links = extract_links(default_content)
 
     return Article(
         path=str(path),
@@ -75,8 +82,10 @@ def _read_article(path: Path) -> Article:
         slug=slug,
         title=title.strip(),
         frontmatter=fm.data,
-        body=layers.default_content,
-        default_layer=layers.default_layer,
+        body=default_content,
+        base_body=layers.base_content,
+        layers=layers.layer_contents,
+        default_layer=default_layer,
         available_layers=layers.available_layers,
         outgoing=[link.slug for link in links],
     )
