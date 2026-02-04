@@ -2,6 +2,8 @@
 import articles from "../../../../build/articles.json" assert { type: "json" };
 import { marked } from "marked";
 import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
+import Navbox from "../../../components/Navbox.astro";
+import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -14,6 +16,15 @@ const { article } = Astro.props;
 const html = marked.parse(article.body);
 const rels = genealogy[article.slug] || null;
 const showLayers = article.available_layers && article.available_layers.length > 1;
+const articlesBySlug = new Set(articles.map((a) => a.slug));
+const navboxRefs = Array.isArray(article.frontmatter?.navboxes) ? article.frontmatter.navboxes : [];
+const navboxList = navboxRefs
+  .map((ref) => {
+    const match = navboxes.find((n) => n.id === ref.id);
+    if (!match) return null;
+    return { ...match, title: ref.title || match.title };
+  })
+  .filter(Boolean);
 
 function unique(list) {
   return Array.from(new Set(list));
@@ -55,6 +66,13 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           <p><strong>House:</strong> {rels.house || "None"}</p>
           <p><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</p>
           <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
+        </section>
+      )}
+      {navboxList.length > 0 && (
+        <section>
+          {navboxList.map((navbox) => (
+            <Navbox navbox={navbox} articlesBySlug={articlesBySlug} />
+          ))}
         </section>
       )}
     </main>

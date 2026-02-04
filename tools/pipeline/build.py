@@ -11,6 +11,7 @@ from .layers import LayerParseError, parse_layers
 from .links import extract_links
 from .models import Article
 from .schema import validate_schema
+from .yaml_min import loads as yaml_loads
 
 
 class BuildError(Exception):
@@ -217,6 +218,19 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         encoding="utf-8",
     )
 
+    # Navboxes (YAML in data/navboxes)
+    navbox_dir = Path(__file__).resolve().parents[2] / "data" / "navboxes"
+    navboxes: list[dict[str, Any]] = []
+    if navbox_dir.exists():
+        for path in navbox_dir.glob("*.yml"):
+            data = yaml_loads(path.read_text(encoding="utf-8"))
+            if data:
+                navboxes.append(data)
+    (out_dir / "navboxes.json").write_text(
+        json.dumps(navboxes, indent=2),
+        encoding="utf-8",
+    )
+
     # Genealogy
     genealogy: dict[str, dict[str, Any]] = {}
     slug_to_type = {a.slug: a.type for a in articles}
@@ -307,6 +321,7 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         "placeholders": len(placeholders),
         "facets": len(facets),
         "genealogy": len(genealogy),
+        "navboxes": len(navboxes),
         "output": str(out_dir),
     }
 

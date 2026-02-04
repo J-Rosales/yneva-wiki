@@ -1,0 +1,7 @@
+id: example_navbox
+title: Example Navbox
+groups:
+  - title: Example Group
+    items:
+      - slug: justinian-i
+        label: Justinian I
