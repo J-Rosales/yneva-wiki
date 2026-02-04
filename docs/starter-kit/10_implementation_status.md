@@ -17,7 +17,8 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: initial Astro scaffold with basic index and wiki page rendering (Markdown body rendering) and genealogy summary on person pages.
   - Implemented: navbox rendering component and frontmatter hooks.
   - Implemented: generic infobox renderer with type config.
-  - Pending: layer toggle UI, full layout.
+  - Implemented: layer toggle UI with client-side switching.
+  - Pending: full layout.
 
 - **Link graph and related content (04_link_graph_and_related_content.md)**: Partial
   - Implemented: link extraction from default layer, basic link graph JSON.

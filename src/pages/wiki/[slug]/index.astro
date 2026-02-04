@@ -6,6 +6,7 @@ import Navbox from "../../../components/Navbox.astro";
 import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
 import infoboxes from "../../../../data/infoboxes/index.json" assert { type: "json" };
 import Infobox from "../../../components/Infobox.astro";
+import LayerToggle from "../../../components/LayerToggle.astro";
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -28,6 +29,12 @@ const navboxList = navboxRefs
   })
   .filter(Boolean);
 const infoboxConfig = infoboxes.find((cfg) => cfg.type === article.type) || null;
+const layerHtml = {};
+if (article.layers) {
+  for (const [layer, body] of Object.entries(article.layers)) {
+    layerHtml[layer] = marked.parse(body);
+  }
+}
 
 function unique(list) {
   return Array.from(new Set(list));
@@ -49,18 +56,23 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
     <title>{article.title}</title>
   </head>
   <body>
-    <main>
-      {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
-      <h1>{article.title}</h1>
-      <p><strong>Type:</strong> {article.type}</p>
-      {showLayers && (
-        <nav>
-          {article.available_layers.map((layer) => (
-            <a href={`/wiki/${article.slug}/${layer}/`}>{layer}</a>
-          ))}
-        </nav>
-      )}
-      <article data-pagefind-body set:html={html} />
+    <main class="wiki">
+      <section class="wiki__content">
+        <h1>{article.title}</h1>
+        <p><strong>Type:</strong> {article.type}</p>
+        <article id="layer-body" data-pagefind-body set:html={html} />
+      </section>
+      <aside class="wiki__aside">
+        {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
+        {showLayers && (
+          <LayerToggle
+            slug={article.slug}
+            layers={article.available_layers}
+            layerHtml={layerHtml}
+            activeLayer={article.default_layer}
+          />
+        )}
+      </aside>
       {rels && (
         <section>
           <h2>Genealogy</h2>
@@ -80,5 +92,20 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
         </section>
       )}
     </main>
+  <style>
+    .wiki {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 1rem;
+    }
+    .wiki__aside {
+      align-self: start;
+    }
+    @media (max-width: 900px) {
+      .wiki {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
   </body>
 </html>

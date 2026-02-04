@@ -2,6 +2,9 @@
 import articles from "../../../../../build/articles.json" assert { type: "json" };
 import { marked } from "marked";
 import genealogy from "../../../../../build/genealogy.json" assert { type: "json" };
+import Infobox from "../../../../components/Infobox.astro";
+import infoboxes from "../../../../../data/infoboxes/index.json" assert { type: "json" };
+import LayerToggle from "../../../../components/LayerToggle.astro";
 
 export function getStaticPaths() {
   const paths = [];
@@ -22,6 +25,13 @@ const content = article.layers?.[layer] || article.base_body || article.body;
 const html = marked.parse(content);
 const rels = genealogy[article.slug] || null;
 const showLayers = article.available_layers && article.available_layers.length > 1;
+const infoboxConfig = infoboxes.find((cfg) => cfg.type === article.type) || null;
+const layerHtml = {};
+if (article.layers) {
+  for (const [k, body] of Object.entries(article.layers)) {
+    layerHtml[k] = marked.parse(body);
+  }
+}
 ---
 
 <html lang="en">
@@ -32,17 +42,23 @@ const showLayers = article.available_layers && article.available_layers.length >
     <link rel="canonical" href={`/wiki/${article.slug}/${layer}/`} />
   </head>
   <body>
-    <main>
-      <h1>{article.title}</h1>
-      <p><strong>Type:</strong> {article.type}</p>
-      {showLayers && (
-        <nav>
-          {article.available_layers.map((l) => (
-            <a href={`/wiki/${article.slug}/${l}/`}>{l}</a>
-          ))}
-        </nav>
-      )}
-      <article data-pagefind-body set:html={html} />
+    <main class="wiki">
+      <section class="wiki__content">
+        <h1>{article.title}</h1>
+        <p><strong>Type:</strong> {article.type}</p>
+        <article id="layer-body" data-pagefind-body set:html={html} />
+      </section>
+      <aside class="wiki__aside">
+        {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
+        {showLayers && (
+          <LayerToggle
+            slug={article.slug}
+            layers={article.available_layers}
+            layerHtml={layerHtml}
+            activeLayer={layer}
+          />
+        )}
+      </aside>
       {rels && (
         <section>
           <h2>Genealogy</h2>
@@ -53,5 +69,20 @@ const showLayers = article.available_layers && article.available_layers.length >
         </section>
       )}
     </main>
+    <style>
+      .wiki {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 1rem;
+      }
+      .wiki__aside {
+        align-self: start;
+      }
+      @media (max-width: 900px) {
+        .wiki {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </body>
 </html>

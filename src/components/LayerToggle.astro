@@ -1,0 +1,84 @@
+---
+const { slug, layers, layerHtml, activeLayer } = Astro.props;
+const labels = {
+  solar: "Sollerian Canon",
+  academic: "Magocratic Canon",
+};
+const tooltip =
+  "This article has multiple narrative layers. Use the tabs to switch perspectives.";
+---
+
+<section class="layer-toggle" data-layer-toggle>
+  <div class="layer-toggle__header">
+    <span>Layers</span>
+    <span class="layer-toggle__help" title={tooltip}>(?)</span>
+  </div>
+  <nav class="layer-toggle__tabs">
+    {layers.map((layer) => (
+      <a
+        class={`layer-toggle__tab ${layer === activeLayer ? "is-active" : ""}`}
+        href={`/wiki/${slug}/${layer}/`}
+        data-layer={layer}
+      >
+        {labels[layer] || layer}
+      </a>
+    ))}
+  </nav>
+  <script type="application/json" data-layer-html>
+    {JSON.stringify(layerHtml)}
+  </script>
+  <script type="application/json" data-layer-slug>
+    {JSON.stringify(slug)}
+  </script>
+</section>
+
+<script>
+  const root = document.querySelector("[data-layer-toggle]");
+  if (root) {
+    const htmlMap = JSON.parse(root.querySelector("[data-layer-html]").textContent);
+    const slug = JSON.parse(root.querySelector("[data-layer-slug]").textContent);
+    const body = document.getElementById("layer-body");
+    const tabs = root.querySelectorAll("[data-layer]");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", (e) => {
+        e.preventDefault();
+        const layer = tab.getAttribute("data-layer");
+        const html = htmlMap[layer];
+        if (body && html) {
+          body.innerHTML = html;
+          history.pushState(null, "", `/wiki/${slug}/${layer}/`);
+          tabs.forEach((t) => t.classList.remove("is-active"));
+          tab.classList.add("is-active");
+        }
+      });
+    });
+  }
+</script>
+
+<style>
+  .layer-toggle {
+    border: 1px solid #666;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .layer-toggle__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  .layer-toggle__tabs {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .layer-toggle__tab {
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .layer-toggle__tab.is-active {
+    border-bottom-color: #333;
+  }
+  .layer-toggle__help {
+    cursor: help;
+  }
+</style>
