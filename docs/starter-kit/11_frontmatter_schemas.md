@@ -47,14 +47,17 @@ These core groups are minimal across all types, with type-specific field variant
 
 The following minimal fields are required in addition to the core groups above.
 
+1. **administrative_division**: `name`, `summary`, `region`, `status`
 2. **artifact**: `current_location`
 3. **belief_regime**: `rituals`
 4. **book**: `author`, `language`
 5. **character**: `species`
 6. **currency**: `symbol`
 7. **deity**: `mythology`
+8. **settlement**: `name`, `summary`, `location`, `status`
 9. **event**: `participants`
 10. **historical_period**: `preceded_by`, `followed_by` (may be `"none"` or `"unknown"`)
+11. **structure**: `name`, `summary`, `location`, `constructed`
 14. **military_unit**: `allegiance`
 15. **ordinance**: `issuer`
 20. **technical_concept**: `definition`
