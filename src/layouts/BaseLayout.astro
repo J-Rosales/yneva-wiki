@@ -53,12 +53,18 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     --text: #222;
     --border: #666;
     --accent: #7a6b00;
+    --accent-soft: #e9dcc0;
+    --accent-deep: #5c4a00;
   }
   body[data-layer="solar"] {
     --accent: #c28a00;
+    --accent-soft: #f6e6b6;
+    --accent-deep: #8a5d00;
   }
   body[data-layer="academic"] {
     --accent: #2a78c8;
+    --accent-soft: #d6e7fb;
+    --accent-deep: #1c4f8c;
   }
   body {
     margin: 0;
@@ -94,6 +100,7 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     background: #fff;
     padding: 1rem;
     border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 8px var(--accent-soft);
   }
   .breadcrumbs {
     margin-bottom: 0.75rem;
