@@ -1,4 +1,50 @@
-features:
+to_do:
+  - id: border-thickness-tuning
+    title: Double-line border thickness rules
+    description: Use a 4px inner line (closest to the edge) and a 6px outer line (furthest from the edge) on site-main, infobox, navbox, and header blocks.
+    details: The 4px inner line should match the background color of the containing element.
+
+  - id: body-width-options
+    title: Body width options update
+    description: Replace width options with full, 3/4, 2/3, and 1/2.
+    details: Applies to the center body on all pages.
+
+  - id: dark-mode-icon-swap
+    title: Dark mode icon behavior
+    description: Show a moon icon in light mode and a sun icon in dark mode.
+    details: Do not display the combined ☀︎/☾ symbol.
+
+  - id: navbar-search-enter-and-button
+    title: Navbar search controls
+    description: Navbar search should show live results, accept Enter to search, and include a magnifying-glass button that triggers the same search.
+    details: The button should be adjacent to the input.
+
+  - id: navbar-advanced-search-order
+    title: Navbar link placement
+    description: Place the Advanced Search link to the right of the navbar search box.
+    details: Keep other controls in their current group.
+
+  - id: navbar-home-link-removal
+    title: Home link behavior
+    description: Remove the Home link from the navbar and make the site brand link back to home.
+    details: Site header brand becomes the home affordance.
+
+  - id: dark-mode-palette-expansion
+    title: Dark mode palette expansion
+    description: In dark mode, shift the overall palette to darker values while preserving narrative-layer accents.
+    details: Expand palette tokens if needed to support this.
+
+  - id: footer-removal
+    title: Remove site footer
+    description: Remove the site-footer and move its contents into the site-main at the bottom.
+    details: Footer content should render after all other main content.
+
+  - id: foldable-system-sections
+    title: Foldable system sections
+    description: Genealogy, Family Tree, and Related Content should each render as h2 sections and be fully foldable.
+    details: Their contents should appear where paragraph text typically appears under an h2.
+
+implemented:
   - id: home-about-and-latest
     title: Home page about + latest articles
     description: Add a single paragraph explaining the wiki and narrative layers, followed by a latest-articles links section.

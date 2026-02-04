@@ -211,6 +211,12 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
       });
     }
 
+    queryInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        search();
+      }
+    });
     queryInput.addEventListener("input", search);
     typeFilter.addEventListener("change", search);
     tagFilter.addEventListener("change", () => {

@@ -143,8 +143,8 @@ const dynastyChildren = dynastyData?.child_houses || [];
         )}
       </aside>
       {rels && !isDisambiguation && (
-        <section class="genealogy">
-          <h2>Genealogy</h2>
+        <details class="system-section" open>
+          <summary>Genealogy</summary>
           <ul class="genealogy__list">
             <li><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</li>
             <li><strong>Spouses:</strong> {rels.spouses?.join(", ") || "None"}</li>
@@ -153,7 +153,7 @@ const dynastyChildren = dynastyData?.child_houses || [];
             <li><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</li>
             <li><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</li>
           </ul>
-        </section>
+        </details>
       )}
       {article && article.type === "dynasty" && dynastyData && !isDisambiguation && (
         <section>
@@ -176,7 +176,7 @@ const dynastyChildren = dynastyData?.child_houses || [];
         </section>
       )}
       {rels && !isDisambiguation && (
-        <details class="family-tree" open>
+        <details class="system-section" open>
           <summary>Family Tree</summary>
           <FamilyTree slug={article.slug} />
         </details>
@@ -189,14 +189,15 @@ const dynastyChildren = dynastyData?.child_houses || [];
         </section>
       )}
       {!isDisambiguation && (
-        <RelatedContent items={relatedForArticle} titleBySlug={articleTitleBySlug} />
+        <details class="system-section" open>
+          <summary>Related Content</summary>
+          <RelatedContent items={relatedForArticle} titleBySlug={articleTitleBySlug} />
+        </details>
       )}
     </main>
-  <Fragment slot="footer">
-    {article && !isDisambiguation && (
-      <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
-    )}
-  </Fragment>
+  {article && !isDisambiguation && (
+    <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
+  )}
   <script>
     (function () {
       const articleBody = document.getElementById("layer-body");
@@ -227,7 +228,8 @@ const dynastyChildren = dynastyData?.child_houses || [];
     .genealogy__list li {
       margin: 0.2rem 0;
     }
-    .family-tree summary {
+    .family-tree summary,
+    .system-section summary {
       cursor: pointer;
       font-weight: 600;
       margin-bottom: 0.5rem;
