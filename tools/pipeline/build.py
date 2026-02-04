@@ -14,6 +14,9 @@ from .schema import validate_schema
 from .yaml_min import loads as yaml_loads
 
 
+ALLOWED_INFOBOX_FIELD_TYPES = {"text", "date", "slug", "list", "image"}
+
+
 class BuildError(Exception):
     pass
 
@@ -96,12 +99,57 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
     articles: list[Article] = []
     slugs: set[str] = set()
     redirects: dict[str, str] = {}
+    infobox_configs: dict[str, dict[str, Any]] = {}
+
+    # Infobox configs
+    infobox_path = Path(__file__).resolve().parents[2] / "data" / "infoboxes" / "index.json"
+    if infobox_path.exists():
+        infobox_list = json.loads(infobox_path.read_text(encoding="utf-8"))
+        for cfg in infobox_list:
+            cfg_type = cfg.get("type")
+            if not isinstance(cfg_type, str) or not cfg_type.strip():
+                raise BuildError("Infobox config missing type")
+            if cfg_type in infobox_configs:
+                raise BuildError(f"Duplicate infobox config for type '{cfg_type}'")
+            fields = cfg.get("fields", [])
+            if not isinstance(fields, list):
+                raise BuildError(f"Infobox fields must be a list for type '{cfg_type}'")
+            seen = set()
+            for field in fields:
+                key = field.get("key")
+                label = field.get("label")
+                ftype = field.get("type")
+                if not isinstance(key, str) or not key.strip():
+                    raise BuildError(f"Infobox field missing key for type '{cfg_type}'")
+                if key in seen:
+                    raise BuildError(f"Duplicate infobox field '{key}' for type '{cfg_type}'")
+                seen.add(key)
+                if not isinstance(label, str) or not label.strip():
+                    raise BuildError(f"Infobox field '{key}' missing label for type '{cfg_type}'")
+                if ftype not in ALLOWED_INFOBOX_FIELD_TYPES:
+                    raise BuildError(f"Infobox field '{key}' has invalid type '{ftype}' for type '{cfg_type}'")
+            infobox_configs[cfg_type] = cfg
 
     for path in wiki_root.rglob("*.md"):
         article = _read_article(path)
         if article.slug in slugs:
             raise BuildError(f"Duplicate slug detected: {article.slug}")
         slugs.add(article.slug)
+        if article.type not in infobox_configs:
+            raise BuildError(f"{path}: missing infobox config for type '{article.type}'")
+        # Validate frontmatter types against infobox config
+        for field in infobox_configs[article.type].get("fields", []):
+            key = field["key"]
+            ftype = field["type"]
+            value = article.frontmatter.get(key)
+            if value is None or value == "":
+                continue
+            if ftype == "list":
+                if not isinstance(value, list) and not isinstance(value, str):
+                    raise BuildError(f"{path}: field '{key}' must be list or string")
+            elif ftype in ("text", "slug", "image", "date"):
+                if not isinstance(value, (str, int)):
+                    raise BuildError(f"{path}: field '{key}' must be string or number")
         for alt in article.frontmatter.get("redirects", []) or []:
             if not isinstance(alt, str) or not alt.strip():
                 raise BuildError(f"{path}: invalid redirect entry")
