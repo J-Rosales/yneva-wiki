@@ -143,14 +143,16 @@ const dynastyChildren = dynastyData?.child_houses || [];
         )}
       </aside>
       {rels && !isDisambiguation && (
-        <section>
+        <section class="genealogy">
           <h2>Genealogy</h2>
-          <p><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</p>
-          <p><strong>Spouses:</strong> {rels.spouses?.join(", ") || "None"}</p>
-          <p><strong>Children:</strong> {rels.children?.join(", ") || "None"}</p>
-          <p><strong>House:</strong> {rels.house || "None"}</p>
-          <p><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</p>
-          <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
+          <ul class="genealogy__list">
+            <li><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</li>
+            <li><strong>Spouses:</strong> {rels.spouses?.join(", ") || "None"}</li>
+            <li><strong>Children:</strong> {rels.children?.join(", ") || "None"}</li>
+            <li><strong>House:</strong> {rels.house || "None"}</li>
+            <li><strong>Extended Parents:</strong> {extendedParents.join(", ") || "None"}</li>
+            <li><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</li>
+          </ul>
         </section>
       )}
       {article && article.type === "dynasty" && dynastyData && !isDisambiguation && (
@@ -174,10 +176,10 @@ const dynastyChildren = dynastyData?.child_houses || [];
         </section>
       )}
       {rels && !isDisambiguation && (
-        <section>
-          <h2>Family Tree</h2>
+        <details class="family-tree" open>
+          <summary>Family Tree</summary>
           <FamilyTree slug={article.slug} />
-        </section>
+        </details>
       )}
       {navboxList.length > 0 && !isDisambiguation && (
         <section>
@@ -195,7 +197,41 @@ const dynastyChildren = dynastyData?.child_houses || [];
       <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
     )}
   </Fragment>
+  <script>
+    (function () {
+      const articleBody = document.getElementById("layer-body");
+      if (!articleBody) return;
+      const headings = Array.from(articleBody.querySelectorAll("h2"));
+      headings.forEach((heading) => {
+        const details = document.createElement("details");
+        details.open = true;
+        const summary = document.createElement("summary");
+        summary.textContent = heading.textContent || "";
+        details.appendChild(summary);
+        let next = heading.nextSibling;
+        while (next && !(next.nodeType === 1 && next.tagName === "H2")) {
+          const current = next;
+          next = next.nextSibling;
+          details.appendChild(current);
+        }
+        heading.replaceWith(details);
+      });
+    })();
+  </script>
   <style>
+    .genealogy__list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.25rem 0 0;
+    }
+    .genealogy__list li {
+      margin: 0.2rem 0;
+    }
+    .family-tree summary {
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
     .wiki {
       display: grid;
       grid-template-columns: 1fr 280px;

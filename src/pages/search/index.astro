@@ -26,6 +26,7 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
       <option value={t}>{t}</option>
     ))}
   </select>
+  <div id="tagPills" class="tag-pills"></div>
   <select id="layerFilter">
     <option value="">All layers</option>
     <option value="solar">solar</option>
@@ -44,6 +45,24 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
       border-radius: 4px;
       margin-right: 0.4em;
     }
+    .tag-pills {
+      margin: 0.5rem 0 0.75rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tag-pill {
+      padding: 0.2rem 0.5rem;
+      border: 1px solid #666;
+      border-radius: 999px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .tag-pill.active {
+      border-color: var(--accent-deep);
+      background: var(--accent-soft);
+    }
   </style>
   <div id="results"></div>
 
@@ -55,6 +74,7 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
     const tagFilter = document.getElementById("tagFilter");
     const layerFilter = document.getElementById("layerFilter");
     const results = document.getElementById("results");
+    const tagPills = document.getElementById("tagPills");
 
     function getUrlState() {
       const params = new URLSearchParams(window.location.search);
@@ -155,9 +175,48 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
       }
     }
 
+    function renderTagPills() {
+      if (!tagPills) return;
+      const tags = Array.from(
+        new Set(
+          facets
+            .flatMap((f) => Array.isArray(f.tags) ? f.tags : [])
+            .filter(Boolean)
+        )
+      );
+      tagPills.innerHTML = tags
+        .map((tag) => `<button class="tag-pill" data-tag="${tag}" type="button">${tag}</button>`)
+        .join("");
+      tagPills.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!target || !target.dataset || !target.dataset.tag) return;
+        const selected = target.dataset.tag;
+        if (tagFilter.value === selected) {
+          tagFilter.value = "";
+        } else {
+          tagFilter.value = selected;
+        }
+        updateTagPills();
+        search();
+      });
+      updateTagPills();
+    }
+
+    function updateTagPills() {
+      if (!tagPills) return;
+      const buttons = tagPills.querySelectorAll(".tag-pill");
+      buttons.forEach((btn) => {
+        const active = btn.dataset.tag === tagFilter.value;
+        btn.classList.toggle("active", active);
+      });
+    }
+
     queryInput.addEventListener("input", search);
     typeFilter.addEventListener("change", search);
-    tagFilter.addEventListener("change", search);
+    tagFilter.addEventListener("change", () => {
+      updateTagPills();
+      search();
+    });
     layerFilter.addEventListener("change", search);
 
     const state = getUrlState();
@@ -165,6 +224,7 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
     if (state.type) typeFilter.value = state.type;
     if (state.tag) tagFilter.value = state.tag;
     if (state.layer) layerFilter.value = state.layer;
+    renderTagPills();
     if (state.q) search();
   </script>
 
