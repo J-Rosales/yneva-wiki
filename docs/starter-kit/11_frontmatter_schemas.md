@@ -58,6 +58,9 @@ The following minimal fields are required in addition to the core groups above.
 9. **event**: `participants`
 10. **historical_period**: `preceded_by`, `followed_by` (may be `"none"` or `"unknown"`)
 11. **structure**: `name`, `summary`, `location`, `constructed`
+12. **belief_regime**: `name`, `summary`, `rituals`
+13. **institution**: `name`, `summary`, `location`, `status`
+14. **law**: `name`, `summary`, `enacted`
 14. **military_unit**: `allegiance`
 15. **ordinance**: `issuer`
 20. **technical_concept**: `name`, `summary`, `definition`
