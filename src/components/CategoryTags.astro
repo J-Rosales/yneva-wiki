@@ -1,0 +1,28 @@
+---
+const { tags = [] } = Astro.props;
+const filtered = Array.isArray(tags) ? tags.filter(Boolean) : [];
+---
+
+{filtered.length > 0 && (
+  <div class="tags">
+    {filtered.map((tag) => (
+      <a class="tag" href={`/search/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+    ))}
+  </div>
+)}
+
+<style>
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.4rem 0 0.6rem 0;
+  }
+  .tag {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #666;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.85rem;
+  }
+</style>

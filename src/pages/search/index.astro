@@ -1,6 +1,8 @@
 ---
 import facets from "../../../build/facets.json" assert { type: "json" };
+import articles from "../../../build/articles.json" assert { type: "json" };
 import BaseLayout from "../../layouts/BaseLayout.astro";
+const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
 ---
 
 <BaseLayout title="Search" layer="default" breadcrumbs={[{ href: "/", label: "Home" }, { href: "/search/", label: "Search" }]}>
@@ -47,6 +49,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
   <script type="module">
     const facets = JSON.parse(document.getElementById("facets-data").textContent);
+    const articleTypes = JSON.parse(document.getElementById("article-types-data").textContent);
     const queryInput = document.getElementById("query");
     const typeFilter = document.getElementById("typeFilter");
     const tagFilter = document.getElementById("tagFilter");
@@ -93,8 +96,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         .map((item) => {
           const slug = item.url.replace("/wiki/", "").replace("/", "");
           const record = facets.find((f) => f.slug === slug);
+          const type = articleTypes[slug];
+          if (type === "disambiguation") return null;
           return { item, record };
         })
+          .filter(Boolean)
           .filter(({ record }) => {
             if (!type) return true;
             if (type && record?.type !== type) return false;
@@ -118,7 +124,20 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       count.className = "results-count";
       queryInput.insertAdjacentElement("afterend", count);
 
-      for (const { item, record } of filtered) {
+      const sorted = filtered.slice().sort((a, b) => {
+        const aTitle = a.item?.meta?.title?.toLowerCase?.() || "";
+        const bTitle = b.item?.meta?.title?.toLowerCase?.() || "";
+        const qLower = q.toLowerCase();
+        const aExact = aTitle === qLower ? 1 : 0;
+        const bExact = bTitle === qLower ? 1 : 0;
+        if (aExact !== bExact) return bExact - aExact;
+        const aIncludes = aTitle.includes(qLower) ? 1 : 0;
+        const bIncludes = bTitle.includes(qLower) ? 1 : 0;
+        if (aIncludes !== bIncludes) return bIncludes - aIncludes;
+        return 0;
+      });
+
+      for (const { item, record } of sorted) {
         const el = document.createElement("div");
         const typeBadge = record?.type ? `<span>[${record.type}]</span>` : "";
         const tagBadges = Array.isArray(record?.tags)
@@ -151,5 +170,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
   <script type="application/json" id="facets-data">
     {JSON.stringify(facets)}
+  </script>
+  <script type="application/json" id="article-types-data">
+    {JSON.stringify(Object.fromEntries(articleTypes))}
   </script>
 </BaseLayout>

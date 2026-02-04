@@ -3,6 +3,7 @@ import articles from "../../../../build/articles.json" assert { type: "json" };
 import placeholders from "../../../../build/placeholders.json" assert { type: "json" };
 import { marked } from "marked";
 import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
+import relatedContent from "../../../../build/related-content.json" assert { type: "json" };
 import Navbox from "../../../components/Navbox.astro";
 import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
 import infoboxes from "../../../../data/infoboxes/index.json" assert { type: "json" };
@@ -10,6 +11,9 @@ import Infobox from "../../../components/Infobox.astro";
 import LayerToggle from "../../../components/LayerToggle.astro";
 import FamilyTree from "../../../components/FamilyTree.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import RelatedContent from "../../../components/RelatedContent.astro";
+import CategoryTags from "../../../components/CategoryTags.astro";
+import MetadataFooter from "../../../components/MetadataFooter.astro";
 
 export function getStaticPaths() {
   const articlePaths = articles.map((article) => ({
@@ -31,6 +35,13 @@ const html = article ? marked.parse(article.body) : "";
 const rels = article ? genealogy[article.slug] || null : null;
 const showLayers = article ? article.available_layers && article.available_layers.length > 1 : false;
 const articlesBySlug = new Set(articles.map((a) => a.slug));
+const articleTitleBySlug = new Map(articles.map((a) => [a.slug, a.title]));
+const relatedForArticle = article ? relatedContent[article.slug] || [] : [];
+const isDisambiguation = article ? article.type === "disambiguation" : false;
+const disambiguationEntries =
+  isDisambiguation && Array.isArray(article.frontmatter?.disambiguation_entries)
+    ? article.frontmatter.disambiguation_entries
+    : [];
 const navboxRefs = article && Array.isArray(article.frontmatter?.navboxes) ? article.frontmatter.navboxes : [];
 const navboxList = navboxRefs
   .map((ref) => {
@@ -86,16 +97,38 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           </ul>
         </section>
       )}
-      {article && (
+      {article && !isDisambiguation && (
       <section class="wiki__content">
         <h1>{article.title}</h1>
         <p><strong>Type:</strong> {article.type}</p>
+        <CategoryTags tags={article.frontmatter?.tags} />
         <article id="layer-body" data-pagefind-body set:html={html} />
+        <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
       </section>
       )}
+      {article && isDisambiguation && (
+        <section class="wiki__content">
+          <h1>{article.title}</h1>
+          <p>{article.frontmatter?.summary}</p>
+          <h2>Articles</h2>
+          {disambiguationEntries.length === 0 ? (
+            <p>No entries listed.</p>
+          ) : (
+            <ul>
+              {disambiguationEntries.map((slug) => (
+                <li>
+                  <a href={`/wiki/${slug}/`}>{articleTitleBySlug.get(slug) || `Missing: ${slug}`}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
       <aside class="wiki__aside">
-        {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
-        {showLayers && (
+        {infoboxConfig && !isDisambiguation && (
+          <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />
+        )}
+        {showLayers && !isDisambiguation && (
           <LayerToggle
             slug={article.slug}
             layers={article.available_layers}
@@ -104,7 +137,7 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           />
         )}
       </aside>
-      {rels && (
+      {rels && !isDisambiguation && (
         <section>
           <h2>Genealogy</h2>
           <p><strong>Parents:</strong> {rels.parents?.join(", ") || "None"}</p>
@@ -115,25 +148,22 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
           <p><strong>Extended Children:</strong> {extendedChildren.join(", ") || "None"}</p>
         </section>
       )}
-      {rels && (
+      {rels && !isDisambiguation && (
         <section>
           <h2>Family Tree</h2>
           <FamilyTree slug={article.slug} />
         </section>
       )}
-      {navboxList.length > 0 && (
+      {navboxList.length > 0 && !isDisambiguation && (
         <section>
           {navboxList.map((navbox) => (
             <Navbox navbox={navbox} articlesBySlug={articlesBySlug} />
           ))}
         </section>
       )}
-      <section>
-        <h2>Related content</h2>
-        <ul>
-          <li>Related items will appear here.</li>
-        </ul>
-      </section>
+      {!isDisambiguation && (
+        <RelatedContent items={relatedForArticle} titleBySlug={articleTitleBySlug} />
+      )}
     </main>
   <style>
     .wiki {
