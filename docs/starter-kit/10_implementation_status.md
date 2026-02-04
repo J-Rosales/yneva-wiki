@@ -7,7 +7,7 @@ This document tracks the current implementation status relative to the starter-k
 - **Content model (01_content_model.md)**: Partial
   - Implemented: content discovery, frontmatter parsing, slug/type validation, narrative layer parsing, baseline schema validation for person/dynasty/polity.
   - Implemented: expanded schema coverage across canonical types (see `11_frontmatter_schemas.md`).
-  - Pending: type-specific infobox schemas and full validation coverage.
+  - Implemented: type-specific infobox schema validation via `data/infoboxes/index.json`.
 
 - **Routing and URLs (02_routing_and_urls.md)**: Not implemented
   - Implemented: redirect and placeholder route rendering in Astro.
