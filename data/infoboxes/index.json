@@ -110,5 +110,26 @@
       { "key": "summary", "label": "Summary", "type": "text" },
       { "key": "definition", "label": "Definition", "type": "text" }
     ]
+  },
+  {
+    "type": "institution",
+    "title": "Institution",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "location", "label": "Location", "type": "text" },
+      { "key": "status", "label": "Status", "type": "text" },
+      { "key": "founded", "label": "Founded", "type": "date" }
+    ]
+  },
+  {
+    "type": "law",
+    "title": "Law",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "enacted", "label": "Enacted", "type": "date" },
+      { "key": "author", "label": "Author", "type": "text" }
+    ]
   }
 ]

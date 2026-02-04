@@ -53,6 +53,7 @@ This document tracks the current implementation status relative to the starter-k
   - Baseline required fields for person, dynasty, polity.
   - Expanded required fields for administrative_division, settlement, structure.
   - Expanded required fields for artifact, book, belief_regime, technical_concept.
+  - Expanded required fields for institution and law.
 
 ## Local Sample Content
 
