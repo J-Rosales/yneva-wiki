@@ -30,6 +30,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <option value="academic">academic</option>
   </select>
   <style>
+    :root {
+      --excerpt-length: 160;
+    }
+  </style>
+  <style>
     #results span {
       font-size: 0.85em;
       padding: 0.1em 0.4em;
@@ -70,10 +75,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
     async function search() {
       const q = queryInput.value.trim();
-        const type = typeFilter.value;
-        const tag = tagFilter.value;
-        const layer = layerFilter.value;
+      const type = typeFilter.value;
+      const tag = tagFilter.value;
+      const layer = layerFilter.value;
       results.innerHTML = "";
+      const existingCount = document.querySelector(".results-count");
+      if (existingCount) existingCount.remove();
       setUrlState(q, type, tag, layer);
       if (!q) return;
 
@@ -82,12 +89,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       const data = await searchResult.results.map((r) => r.data());
       const items = await Promise.all(data);
 
-        const filtered = items
-          .map((item) => {
-            const slug = item.url.replace("/wiki/", "").replace("/", "");
-            const record = facets.find((f) => f.slug === slug);
-            return { item, record };
-          })
+      const filtered = items
+        .map((item) => {
+          const slug = item.url.replace("/wiki/", "").replace("/", "");
+          const record = facets.find((f) => f.slug === slug);
+          return { item, record };
+        })
           .filter(({ record }) => {
             if (!type) return true;
             if (type && record?.type !== type) return false;
@@ -102,18 +109,29 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           });
 
       if (filtered.length === 0) {
-        results.innerHTML = "<p>No results found.</p>";
+        results.innerHTML = "<p>No results. Try fewer filters.</p>";
         return;
       }
 
-      const count = document.createElement("p");
+      const count = document.createElement("span");
       count.textContent = `${filtered.length} result(s)`;
-      results.appendChild(count);
+      count.className = "results-count";
+      queryInput.insertAdjacentElement("afterend", count);
 
       for (const { item, record } of filtered) {
         const el = document.createElement("div");
-        const badge = record?.type ? `<span>[${record.type}]</span>` : "";
-        el.innerHTML = `<div>${badge} <a href="${item.url}">${item.meta.title}</a></div><p>${item.excerpt}</p>`;
+        const typeBadge = record?.type ? `<span>[${record.type}]</span>` : "";
+        const tagBadges = Array.isArray(record?.tags)
+          ? record.tags.map((t) => `<span>[${t}]</span>`).join(" ")
+          : "";
+        const layerBadge = item.url.includes("/solar/")
+          ? `<span>[Sollerian Canon]</span>`
+          : item.url.includes("/academic/")
+          ? `<span>[Magocratic Canon]</span>`
+          : "";
+        const length = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--excerpt-length"), 10) || 160;
+        const excerpt = item.excerpt.length > length ? item.excerpt.slice(0, length) + "…" : item.excerpt;
+        el.innerHTML = `<div>${typeBadge} ${tagBadges} ${layerBadge} <a href="${item.url}">${item.meta.title}</a></div><p>${excerpt}</p>`;
         results.appendChild(el);
       }
     }
