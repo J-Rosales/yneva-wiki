@@ -168,10 +168,14 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
     if (state.q) search();
   </script>
 
-  <script type="application/json" id="facets-data">
-    {JSON.stringify(facets)}
-  </script>
-  <script type="application/json" id="article-types-data">
-    {JSON.stringify(Object.fromEntries(articleTypes))}
-  </script>
+  <script
+    type="application/json"
+    id="facets-data"
+    set:html={JSON.stringify(facets)}
+  ></script>
+  <script
+    type="application/json"
+    id="article-types-data"
+    set:html={JSON.stringify(Object.fromEntries(articleTypes))}
+  ></script>
 </BaseLayout>
