@@ -1,0 +1,46 @@
+---
+const { config, frontmatter } = Astro.props;
+
+function renderValue(field) {
+  const value = frontmatter[field.key];
+  if (value === undefined || value === null || value === "") return null;
+  if (field.type === "slug") {
+    return `<a href="/wiki/${value}/">${value}</a>`;
+  }
+  return String(value);
+}
+---
+
+<aside class="infobox">
+  <header class="infobox__title">{config.title}</header>
+  <dl>
+    {config.fields.map((field) => {
+      const value = renderValue(field);
+      if (!value) return null;
+      return (
+        <>
+          <dt>{field.label}</dt>
+          <dd set:html={value} />
+        </>
+      );
+    })}
+  </dl>
+</aside>
+
+<style>
+  .infobox {
+    border: 1px solid #666;
+    padding: 0.5rem;
+    margin: 0 0 1rem 0;
+  }
+  .infobox__title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .infobox dt {
+    font-weight: 600;
+  }
+  .infobox dd {
+    margin: 0 0 0.5rem 0;
+  }
+</style>

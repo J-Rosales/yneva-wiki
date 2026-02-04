@@ -1,0 +1,39 @@
+[
+  {
+    "type": "person",
+    "title": "Person",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "birth_date", "label": "Born", "type": "date" },
+      { "key": "birth_place", "label": "Birth place", "type": "text" },
+      { "key": "death_date", "label": "Died", "type": "date" },
+      { "key": "death_place", "label": "Death place", "type": "text" },
+      { "key": "house", "label": "House", "type": "slug" }
+    ]
+  },
+  {
+    "type": "dynasty",
+    "title": "Dynasty",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "founder", "label": "Founder", "type": "text" },
+      { "key": "founded", "label": "Founded", "type": "date" },
+      { "key": "realm", "label": "Realm", "type": "text" },
+      { "key": "religion", "label": "Religion", "type": "text" }
+    ]
+  },
+  {
+    "type": "polity",
+    "title": "Polity",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "native_name", "label": "Native name", "type": "text" },
+      { "key": "conventional_long_name", "label": "Conventional name", "type": "text" },
+      { "key": "capital", "label": "Capital", "type": "text" },
+      { "key": "status", "label": "Status", "type": "text" },
+      { "key": "government_type", "label": "Government", "type": "text" },
+      { "key": "established", "label": "Established", "type": "date" },
+      { "key": "dissolved", "label": "Dissolved", "type": "date" }
+    ]
+  }
+]

@@ -4,6 +4,8 @@ import { marked } from "marked";
 import genealogy from "../../../../build/genealogy.json" assert { type: "json" };
 import Navbox from "../../../components/Navbox.astro";
 import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
+import infoboxes from "../../../../data/infoboxes/index.json" assert { type: "json" };
+import Infobox from "../../../components/Infobox.astro";
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -25,6 +27,7 @@ const navboxList = navboxRefs
     return { ...match, title: ref.title || match.title };
   })
   .filter(Boolean);
+const infoboxConfig = infoboxes.find((cfg) => cfg.type === article.type) || null;
 
 function unique(list) {
   return Array.from(new Set(list));
@@ -47,6 +50,7 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
   </head>
   <body>
     <main>
+      {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
       <h1>{article.title}</h1>
       <p><strong>Type:</strong> {article.type}</p>
       {showLayers && (
