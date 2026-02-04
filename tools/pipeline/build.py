@@ -208,12 +208,96 @@ def build(wiki_root: Path, out_dir: Path) -> dict[str, Any]:
         encoding="utf-8",
     )
 
+    # Genealogy
+    genealogy: dict[str, dict[str, Any]] = {}
+    slug_to_type = {a.slug: a.type for a in articles}
+
+    def _as_list(value: Any) -> list[str]:
+        if value is None:
+            return []
+        if isinstance(value, list):
+            return [str(v).strip().lower() for v in value if str(v).strip()]
+        if isinstance(value, str):
+            return [value.strip().lower()] if value.strip() else []
+        return []
+
+    for article in articles:
+        if article.type != "person":
+            continue
+        fm = article.frontmatter
+        parents = _as_list(fm.get("parents"))
+        spouses = _as_list(fm.get("spouses"))
+        children = _as_list(fm.get("children"))
+        house = fm.get("house")
+        house_slug = house.strip().lower() if isinstance(house, str) and house.strip() else None
+
+        genealogy[article.slug] = {
+            "parents": parents,
+            "spouses": spouses,
+            "children": children,
+            "house": house_slug,
+        }
+
+    # Validation
+    for person, rels in genealogy.items():
+        for rel_type in ("parents", "spouses", "children"):
+            for target in rels[rel_type]:
+                if target == person:
+                    raise BuildError(f"Genealogy: self reference for {person}")
+                if target not in slug_to_type:
+                    raise BuildError(f"Genealogy: missing reference {target} from {person}")
+                if slug_to_type[target] != "person":
+                    raise BuildError(f"Genealogy: non-person reference {target} from {person}")
+
+        if rels["house"]:
+            if rels["house"] not in slug_to_type:
+                raise BuildError(f"Genealogy: missing house {rels['house']} from {person}")
+            if slug_to_type[rels["house"]] != "dynasty":
+                raise BuildError(f"Genealogy: house {rels['house']} is not a dynasty for {person}")
+
+    # Reciprocal validation
+    for person, rels in genealogy.items():
+        for parent in rels["parents"]:
+            if person not in genealogy.get(parent, {}).get("children", []):
+                raise BuildError(f"Genealogy: missing reciprocal child link {parent} -> {person}")
+        for child in rels["children"]:
+            if person not in genealogy.get(child, {}).get("parents", []):
+                raise BuildError(f"Genealogy: missing reciprocal parent link {child} -> {person}")
+        for spouse in rels["spouses"]:
+            if person not in genealogy.get(spouse, {}).get("spouses", []):
+                raise BuildError(f"Genealogy: missing reciprocal spouse link {spouse} -> {person}")
+
+    # Parent/child cycle detection
+    graph = {p: rels["children"] for p, rels in genealogy.items()}
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def _dfs(node: str) -> None:
+        if node in visiting:
+            raise BuildError(f"Genealogy: cycle detected at {node}")
+        if node in visited:
+            return
+        visiting.add(node)
+        for child in graph.get(node, []):
+            _dfs(child)
+        visiting.remove(node)
+        visited.add(node)
+
+    for person in genealogy.keys():
+        _dfs(person)
+
+    (out_dir / "genealogy.json").write_text(
+        json.dumps(genealogy, indent=2),
+        encoding="utf-8",
+    )
+
     return {
         "articles": len(articles),
         "link_graph_nodes": len(link_graph),
         "redirects": len(redirects),
         "placeholders": len(placeholders),
         "facets": len(facets),
+        "genealogy": len(genealogy),
         "output": str(out_dir),
     }
 
