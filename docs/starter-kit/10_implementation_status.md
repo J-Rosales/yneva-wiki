@@ -29,6 +29,7 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: build-time facets index generation (`facets.json`) and basic search page scaffold with type and tag filtering.
   - Implemented: Pagefind indexing scoped to article body with URL state for search filters.
   - Implemented: basic result count and type badge styling.
+  - Implemented: excerpt truncation and improved empty state messaging.
   - Implemented: layer filter in search UI.
   - Pending: full search UI and result presentation enhancements.
 
