@@ -70,5 +70,45 @@
       { "key": "constructed", "label": "Constructed", "type": "date" },
       { "key": "architect", "label": "Architect", "type": "text" }
     ]
+  },
+  {
+    "type": "artifact",
+    "title": "Artifact",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "current_location", "label": "Current location", "type": "text" },
+      { "key": "created", "label": "Created", "type": "date" },
+      { "key": "discovered", "label": "Discovered", "type": "date" }
+    ]
+  },
+  {
+    "type": "book",
+    "title": "Book",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "author", "label": "Author", "type": "text" },
+      { "key": "language", "label": "Language", "type": "text" },
+      { "key": "publication_date", "label": "Publication date", "type": "date" }
+    ]
+  },
+  {
+    "type": "belief_regime",
+    "title": "Belief Regime",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "rituals", "label": "Rituals", "type": "text" }
+    ]
+  },
+  {
+    "type": "technical_concept",
+    "title": "Technical Concept",
+    "fields": [
+      { "key": "name", "label": "Name", "type": "text" },
+      { "key": "summary", "label": "Summary", "type": "text" },
+      { "key": "definition", "label": "Definition", "type": "text" }
+    ]
   }
 ]

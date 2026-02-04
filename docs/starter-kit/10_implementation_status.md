@@ -52,6 +52,7 @@ This document tracks the current implementation status relative to the starter-k
 - **Frontmatter schemas (11_frontmatter_schemas.md)**: Implemented
   - Baseline required fields for person, dynasty, polity.
   - Expanded required fields for administrative_division, settlement, structure.
+  - Expanded required fields for artifact, book, belief_regime, technical_concept.
 
 ## Local Sample Content
 
