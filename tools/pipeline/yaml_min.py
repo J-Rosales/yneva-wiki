@@ -89,7 +89,16 @@ def loads(text: str) -> dict[str, Any]:
             container = stack[-1][1]
             if not isinstance(container, list):
                 raise YamlParseError(f"List item without list context: {line.raw}")
-            container.append(_parse_scalar(line.content[2:].strip()))
+            item_text = line.content[2:].strip()
+            # Support list item as map: "- key: value"
+            if ":" in item_text:
+                key, rest = item_text.split(":", 1)
+                entry: dict[str, Any] = {key.strip(): _parse_scalar(rest.strip())}
+                container.append(entry)
+                stack.append((line.indent, entry))
+                i += 1
+                continue
+            container.append(_parse_scalar(item_text))
             i += 1
             continue
 

@@ -1,0 +1,53 @@
+---
+const { navbox, articlesBySlug } = Astro.props;
+---
+
+<section class="navbox">
+  <header class="navbox__header">
+    <strong>{navbox.title}</strong>
+  </header>
+  <div class="navbox__groups">
+    {navbox.groups.map((group) => (
+      <div class="navbox__group">
+        <div class="navbox__group-title">{group.title}</div>
+        <div class="navbox__items">
+          {group.items.map((item) => {
+            const exists = articlesBySlug.has(item.slug);
+            const href = exists ? `/wiki/${item.slug}/` : `/missing/${item.slug}/`;
+            return (
+              <a class={exists ? "navbox__link" : "navbox__link navbox__link--missing"} href={href}>
+                {item.label || item.slug}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .navbox {
+    border: 1px solid #666;
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
+  .navbox__header {
+    margin-bottom: 0.5rem;
+  }
+  .navbox__group {
+    margin-bottom: 0.5rem;
+  }
+  .navbox__group-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .navbox__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .navbox__link--missing {
+    color: #c00;
+  }
+</style>
