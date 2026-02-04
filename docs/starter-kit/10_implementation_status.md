@@ -57,9 +57,10 @@ This document tracks the current implementation status relative to the starter-k
   - Implemented: validation-only mode via `--validate`.
   - Implemented: `sitemap.json` build artifact.
 
-- **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Partial
+- **MVP plan and iteration (08_mvp_plan_and_iteration.md)**: Implemented
   - Implemented: MVP checklist aligned to current features (see below).
   - Implemented: phase status summary and notes on current completion.
+  - Implemented: MVP completion status set in `08_mvp_plan_and_iteration.md`.
 
 ## MVP Checklist (Derived from 08_mvp_plan_and_iteration.md)
 

@@ -90,11 +90,11 @@ Certain advanced capabilities are explicitly out of scope for the MVP.
 Deferred features include:
 
 - Advanced structured search filters  
-- Genealogy visualizations  
 - Interactive maps  
 - Timeline views  
 - Full infobox coverage for every article type  
 - Backlink displays (“What links here”)  
+ - Genealogy visualizations beyond the current interactive tree  
 
 These enhancements are planned for later iterations and correspond to questions Q201–Q206.
 
@@ -132,6 +132,10 @@ Development proceeds through a sequence of focused phases.
 
 - Genealogy system  
 - Additional enhancements  
+
+## 12. MVP Completion Status
+
+The project currently meets the MVP criteria listed above. Deferred items remain scoped to post‑MVP iteration.
 
 These phases correspond to questions Q207–Q216.
 

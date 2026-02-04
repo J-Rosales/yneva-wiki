@@ -537,7 +537,9 @@ def build(wiki_root: Path, out_dir: Path, write_outputs: bool = True) -> dict[st
         sitemap_entries = [
             f"/wiki/{a.slug}/"
             for a in articles
-            if a.slug not in placeholders and a.slug not in redirects
+            if a.slug not in placeholders
+            and a.slug not in redirects
+            and a.type != "disambiguation"
         ]
         (out_dir / "sitemap.json").write_text(
             json.dumps({"urls": ["/"] + sitemap_entries}, indent=2),

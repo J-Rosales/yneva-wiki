@@ -7,6 +7,7 @@ const PLACEHOLDER_SLUGS = new Set(Object.keys(placeholders || {}));
 export const GET: APIRoute = async ({ site }) => {
   const base = site ? site.toString().replace(/\/$/, "") : "";
   const urls = articles
+    .filter((article: { slug: string; type: string }) => article.type !== "disambiguation")
     .map((article: { slug: string; type: string }) => article.slug)
     .filter((slug) => slug && !PLACEHOLDER_SLUGS.has(slug));
 

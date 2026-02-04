@@ -104,11 +104,11 @@ const dynastyChildren = dynastyData?.child_houses || [];
         </section>
       )}
       {article && !isDisambiguation && (
-      <section class="wiki__content">
+      <section class="wiki__content" data-pagefind-body>
         <h1>{article.title}</h1>
         <p><strong>Type:</strong> {article.type}</p>
         <CategoryTags tags={article.frontmatter?.tags} />
-        <article id="layer-body" data-pagefind-body set:html={html} />
+        <article id="layer-body" set:html={html} />
         <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
       </section>
       )}
