@@ -54,7 +54,6 @@ if (article.layers) {
         <p><strong>Type:</strong> {article.type}</p>
         <CategoryTags tags={article.frontmatter?.tags} />
         <article id="layer-body" set:html={html} />
-        <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
       </section>
       <aside class="wiki__aside">
         {infoboxConfig && <Infobox config={infoboxConfig} frontmatter={article.frontmatter} />}
@@ -77,6 +76,9 @@ if (article.layers) {
         </section>
       )}
     </main>
+    <Fragment slot="footer">
+      <MetadataFooter type={article.type} frontmatter={article.frontmatter} />
+    </Fragment>
     <style>
       .wiki {
         display: grid;
