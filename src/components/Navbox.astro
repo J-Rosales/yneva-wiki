@@ -13,7 +13,7 @@ const { navbox, articlesBySlug } = Astro.props;
         <div class="navbox__items">
           {group.items.map((item) => {
             const exists = articlesBySlug.has(item.slug);
-            const href = exists ? `/wiki/${item.slug}/` : `/missing/${item.slug}/`;
+            const href = `/wiki/${item.slug}/`;
             return (
               <a class={exists ? "navbox__link" : "navbox__link navbox__link--missing"} href={href}>
                 {item.label || item.slug}
@@ -49,5 +49,6 @@ const { navbox, articlesBySlug } = Astro.props;
   }
   .navbox__link--missing {
     color: #c00;
+    text-decoration: underline dotted;
   }
 </style>
