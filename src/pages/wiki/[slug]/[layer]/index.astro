@@ -43,6 +43,8 @@ if (article.layers) {
     { href: `/wiki/${article.slug}/`, label: article.title },
     { href: `/wiki/${article.slug}/${layer}/`, label: layer }
   ]}
+  canonicalHref={`/wiki/${article.slug}/`}
+  robots="noindex"
 >
     <main class="wiki">
       <section class="wiki__content">
