@@ -5,6 +5,7 @@ import genealogy from "../../../../../build/genealogy.json" assert { type: "json
 import Infobox from "../../../../components/Infobox.astro";
 import infoboxes from "../../../../../data/infoboxes/index.json" assert { type: "json" };
 import LayerToggle from "../../../../components/LayerToggle.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
   const paths = [];
@@ -34,14 +35,15 @@ if (article.layers) {
 }
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{article.title} ({layer})</title>
-    <link rel="canonical" href={`/wiki/${article.slug}/${layer}/`} />
-  </head>
-  <body>
+<BaseLayout
+  title={`${article.title} (${layer})`}
+  layer={layer}
+  breadcrumbs={[
+    { href: "/", label: "Home" },
+    { href: `/wiki/${article.slug}/`, label: article.title },
+    { href: `/wiki/${article.slug}/${layer}/`, label: layer }
+  ]}
+>
     <main class="wiki">
       <section class="wiki__content">
         <h1>{article.title}</h1>
@@ -84,5 +86,4 @@ if (article.layers) {
         }
       }
     </style>
-  </body>
-</html>
+</BaseLayout>

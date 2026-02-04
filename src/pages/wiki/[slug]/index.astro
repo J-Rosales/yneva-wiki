@@ -7,6 +7,7 @@ import navboxes from "../../../../build/navboxes.json" assert { type: "json" };
 import infoboxes from "../../../../data/infoboxes/index.json" assert { type: "json" };
 import Infobox from "../../../components/Infobox.astro";
 import LayerToggle from "../../../components/LayerToggle.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
   return articles.map((article) => ({
@@ -49,13 +50,14 @@ const extendedParents = unique(parentParents).filter((s) => !rels?.parents?.incl
 const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.includes(s));
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{article.title}</title>
-  </head>
-  <body>
+<BaseLayout
+  title={article.title}
+  layer={article.default_layer}
+  breadcrumbs={[
+    { href: "/", label: "Home" },
+    { href: `/wiki/${article.slug}/`, label: article.title }
+  ]}
+>
     <main class="wiki">
       <section class="wiki__content">
         <h1>{article.title}</h1>
@@ -107,5 +109,4 @@ const extendedChildren = unique(childChildren).filter((s) => !rels?.children?.in
       }
     }
   </style>
-  </body>
-</html>
+</BaseLayout>

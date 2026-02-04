@@ -1,5 +1,5 @@
 ---
-const { title = "Yneva Wiki" } = Astro.props;
+const { title = "Yneva Wiki", layer = "default", breadcrumbs = [] } = Astro.props;
 ---
 
 <!doctype html>
@@ -12,15 +12,103 @@ const { title = "Yneva Wiki" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
-    <header>
-      <nav>
+  <body data-layer={layer}>
+    <header class="site-header">
+      <div class="site-header__brand">Yneva Wiki</div>
+      <nav class="site-header__nav">
         <a href="/">Home</a>
         <a href="/search/">Search</a>
       </nav>
     </header>
-    <main>
-      <slot />
-    </main>
+    <div class="site-shell">
+      <aside class="site-sidebar">
+        <div class="site-sidebar__section">Navigation</div>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+        </ul>
+      </aside>
+      <main class="site-main">
+        {breadcrumbs.length > 0 && (
+          <nav class="breadcrumbs">
+            {breadcrumbs.map((b, i) => (
+              <>
+                {i > 0 && <span class="breadcrumbs__sep">/</span>}
+                <a href={b.href}>{b.label}</a>
+              </>
+            ))}
+          </nav>
+        )}
+        <slot />
+      </main>
+    </div>
   </body>
 </html>
+
+<style>
+  :root {
+    --bg: #f7f7f7;
+    --text: #222;
+    --border: #666;
+    --accent: #7a6b00;
+  }
+  body[data-layer="solar"] {
+    --accent: #c28a00;
+  }
+  body[data-layer="academic"] {
+    --accent: #2a78c8;
+  }
+  body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+  h1, h2, h3 {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+  }
+  a {
+    color: var(--accent);
+  }
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+  }
+  .site-shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .site-sidebar {
+    border-right: 1px solid var(--border);
+    padding-right: 1rem;
+  }
+  .site-main {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid var(--border);
+  }
+  .breadcrumbs {
+    margin-bottom: 0.75rem;
+  }
+  .breadcrumbs__sep {
+    margin: 0 0.4rem;
+    color: #888;
+  }
+  @media (max-width: 900px) {
+    .site-shell {
+      grid-template-columns: 1fr;
+    }
+    .site-sidebar {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+</style>
