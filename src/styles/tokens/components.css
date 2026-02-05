@@ -1,0 +1,5 @@
+.wiki-panel {
+  border: var(--surface-border-outer);
+  box-shadow: var(--surface-border-shadow);
+  padding: var(--panel-padding);
+}

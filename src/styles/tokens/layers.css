@@ -1,0 +1,11 @@
+body[data-layer="solar"] {
+  --accent: #c28a00;
+  --accent-soft: #f6e6b6;
+  --accent-deep: #8a5d00;
+}
+
+body[data-layer="academic"] {
+  --accent: #2a78c8;
+  --accent-soft: #d6e7fb;
+  --accent-deep: #1c4f8c;
+}
