@@ -1,5 +1,6 @@
 ---
 const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref = null, robots = null } = Astro.props;
+import "../styles/tokens/index.css";
 ---
 
 <!doctype html>
@@ -175,32 +176,6 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
 </html>
 
 <style>
-  :root {
-    --bg: #f7f7f7;
-    --surface: #ffffff;
-    --text: #222;
-    --border: #666;
-    --accent: #7a6b00;
-    --accent-soft: #e9dcc0;
-    --accent-deep: #5c4a00;
-    --body-width: 100%;
-  }
-  body[data-layer="solar"] {
-    --accent: #c28a00;
-    --accent-soft: #f6e6b6;
-    --accent-deep: #8a5d00;
-  }
-  body[data-layer="academic"] {
-    --accent: #2a78c8;
-    --accent-soft: #d6e7fb;
-    --accent-deep: #1c4f8c;
-  }
-  body[data-theme="dark"] {
-    --bg: #101014;
-    --surface: #17171d;
-    --text: #e5e5ea;
-    --border: #9b9ba6;
-  }
   body {
     margin: 0;
     font-family: Georgia, "Times New Roman", serif;
@@ -219,8 +194,8 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     align-items: center;
     padding: 0.75rem 1rem;
     background: var(--surface);
-    border-bottom: 6px solid var(--accent-deep);
-    box-shadow: inset 0 4px 0 0 var(--surface);
+    border-bottom: var(--surface-border-outer);
+    box-shadow: inset var(--surface-border-accent-thin);
   }
   .site-header__nav {
     display: flex;
@@ -265,8 +240,8 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     left: 0;
     right: 0;
     background: var(--surface);
-    border: 2px double var(--accent-deep);
-    box-shadow: inset 0 0 0 6px var(--accent-soft);
+    border: var(--surface-border-outer);
+    box-shadow: var(--surface-border-shadow);
     z-index: 10;
   }
   .nav-search-item {
@@ -301,15 +276,15 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     padding: 1rem;
   }
   .site-sidebar {
-    border-right: 6px solid var(--accent-deep);
+    border-right: var(--surface-border-outer);
     box-shadow: inset -4px 0 0 0 var(--surface);
     padding-right: 1rem;
   }
   .site-main {
     background: var(--surface);
     padding: 1rem;
-    border: 6px solid var(--accent-deep);
-    box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 12px var(--accent-soft);
+    border: var(--surface-border-outer);
+    box-shadow: var(--surface-border-shadow);
     width: 100%;
     max-width: var(--body-width);
     justify-self: center;
@@ -324,8 +299,8 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
   h1::after {
     content: "";
     display: block;
-    border-bottom: 6px solid var(--accent-deep);
-    box-shadow: inset 0 4px 0 0 var(--surface);
+    border-bottom: var(--surface-border-outer);
+    box-shadow: inset var(--surface-border-accent-thin);
     margin-top: 0.35rem;
   }
   h2::after {
@@ -348,8 +323,8 @@ const { title = "Yneva Wiki", layer = "default", breadcrumbs = [], canonicalHref
     }
     .site-sidebar {
       border-right: none;
-      border-bottom: 6px solid var(--accent-deep);
-      box-shadow: inset 0 4px 0 0 var(--surface);
+      border-bottom: var(--surface-border-outer);
+      box-shadow: inset var(--surface-border-accent-thin);
       padding-bottom: 0.75rem;
       margin-bottom: 0.75rem;
     }

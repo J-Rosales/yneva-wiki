@@ -1,0 +1,23 @@
+:root {
+  /* Primitive spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+
+  /* Primitive radii */
+  --radius-1: 2px;
+  --radius-2: 4px;
+
+  /* Primitive border widths */
+  --line-1: 1px;
+  --line-4: 4px;
+  --line-6: 6px;
+
+  /* Primitive neutrals (light) */
+  --neutral-1: #f7f7f7;
+  --neutral-2: #ffffff;
+  --neutral-8: #222222;
+  --neutral-6: #666666;
+}
