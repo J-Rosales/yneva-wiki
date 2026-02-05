@@ -5,7 +5,7 @@
 - [x] Phase 1: Create token file structure and wire global imports.
 - [x] Phase 2: Refactor repeated panel/border styles to shared tokenized classes.
 - [x] Phase 3: Add token-discipline checks in scripts and documentation.
-- [ ] Phase 4: Build verification and finalize rollout notes.
+- [x] Phase 4: Build verification and finalize rollout notes.
 
 ## 1. Objective
 
@@ -216,3 +216,14 @@ Completion criteria:
 - no raw color literals in component-level styles
 - width, borders, and theme/layer behavior all token-driven
 - visual tests stable across contexts
+
+## 8. Verification
+
+Completed checks:
+- `npm run tokens:check` passed.
+- `npm run build` passed (pipeline + Astro build + Pagefind).
+
+Current scope coverage:
+- Token files are globally imported from `src/styles/tokens/index.css`.
+- Shared panel treatment is centralized through `.wiki-panel`.
+- Component/layout/page raw hex colors are enforced by `tools/check-token-discipline.mjs`.
