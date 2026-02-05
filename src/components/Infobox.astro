@@ -60,16 +60,13 @@ const rows = config.fields
   .join("");
 ---
 
-<aside class="infobox">
+<aside class="infobox wiki-panel">
   <header class="infobox__title">{config.title}</header>
   <dl set:html={rows}></dl>
 </aside>
 
 <style>
   .infobox {
-    border: 6px solid var(--accent-deep);
-    box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 12px var(--accent-soft);
-    padding: 0.5rem;
     margin: 0 0 1rem 0;
   }
   .infobox__title {

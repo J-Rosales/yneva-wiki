@@ -2,7 +2,7 @@
 const { navbox, articlesBySlug } = Astro.props;
 ---
 
-<section class="navbox">
+<section class="navbox wiki-panel">
   <header class="navbox__header">
     <strong>{navbox.title}</strong>
   </header>
@@ -28,9 +28,6 @@ const { navbox, articlesBySlug } = Astro.props;
 
 <style>
   .navbox {
-    border: 6px solid var(--accent-deep);
-    box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 12px var(--accent-soft);
-    padding: 0.5rem;
     margin-top: 1rem;
   }
   .navbox__header {

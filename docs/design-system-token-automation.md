@@ -3,7 +3,7 @@
 ## Execution Checklist
 
 - [x] Phase 1: Create token file structure and wire global imports.
-- [ ] Phase 2: Refactor repeated panel/border styles to shared tokenized classes.
+- [x] Phase 2: Refactor repeated panel/border styles to shared tokenized classes.
 - [ ] Phase 3: Add token-discipline checks in scripts and documentation.
 - [ ] Phase 4: Build verification and finalize rollout notes.
 
@@ -126,8 +126,8 @@ Goal:
 
 Migrate in this order:
 1. `src/layouts/BaseLayout.astro`
-2. `src/components/Infobox.astro`
-3. `src/components/Navbox.astro`
+2. `src/components/Infobox.astro` (implemented with shared `.wiki-panel`)
+3. `src/components/Navbox.astro` (implemented with shared `.wiki-panel`)
 4. `src/pages/search/index.astro`
 
 Rule:
