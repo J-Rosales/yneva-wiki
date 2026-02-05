@@ -4,7 +4,7 @@
 
 - [x] Phase 1: Create token file structure and wire global imports.
 - [x] Phase 2: Refactor repeated panel/border styles to shared tokenized classes.
-- [ ] Phase 3: Add token-discipline checks in scripts and documentation.
+- [x] Phase 3: Add token-discipline checks in scripts and documentation.
 - [ ] Phase 4: Build verification and finalize rollout notes.
 
 ## 1. Objective
@@ -138,6 +138,7 @@ Rule:
 Add lint/CI rules:
 - forbid `#xxxxxx` in component/layout/page style blocks (except token files)
 - forbid direct numeric spacing where equivalent semantic token exists
+- implemented local check: `npm run tokens:check` (`tools/check-token-discipline.mjs`)
 
 Goal:
 - Prevent regression into ad-hoc styling.

@@ -41,7 +41,7 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
     #results span {
       font-size: 0.85em;
       padding: 0.1em 0.4em;
-      border: 1px solid #666;
+      border: 1px solid var(--border);
       border-radius: 4px;
       margin-right: 0.4em;
     }
@@ -53,9 +53,9 @@ const articleTypes = new Map(articles.map((a) => [a.slug, a.type]));
     }
     .tag-pill {
       padding: 0.2rem 0.5rem;
-      border: 1px solid #666;
+      border: 1px solid var(--border);
       border-radius: 999px;
-      background: #fff;
+      background: var(--tag-surface);
       cursor: pointer;
       font-size: 0.85rem;
     }

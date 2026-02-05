@@ -47,7 +47,7 @@ const { slug } = Astro.props;
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       const midY = (y1 + y2) / 2;
       path.setAttribute("d", `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`);
-      path.setAttribute("stroke", "#444");
+      path.setAttribute("stroke", "var(--line-strong)");
       path.setAttribute("fill", "none");
       svg.appendChild(path);
     }
@@ -126,7 +126,7 @@ const { slug } = Astro.props;
   }
   .family-tree__canvas {
     position: relative;
-    border: 1px solid #666;
+    border: 1px solid var(--border);
     padding: 1rem;
   }
   .family-tree__grid {
@@ -140,9 +140,9 @@ const { slug } = Astro.props;
     justify-content: center;
   }
   .family-tree__node {
-    border: 1px solid #666;
+    border: 1px solid var(--border);
     padding: 0.25rem 0.5rem;
-    background: #fff;
+    background: var(--surface);
     text-decoration: none;
     color: inherit;
   }
