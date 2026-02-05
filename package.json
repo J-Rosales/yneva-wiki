@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "python -m tools.pipeline.build && astro build && npx pagefind --site dist",
+    "tokens:check": "node tools/check-token-discipline.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
