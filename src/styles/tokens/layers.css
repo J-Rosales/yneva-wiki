@@ -1,11 +1,61 @@
+/* Base layer palettes (apply regardless of theme) */
 body[data-layer="solar"] {
-  --accent: #c28a00;
-  --accent-soft: #f6e6b6;
-  --accent-deep: #8a5d00;
+  --accent: #b77a00;
+  --accent-soft: #f6e5b7;
+  --accent-deep: #7f4f00;
+  --accent-surface: #fcf4dc;
+  --accent-ink: #3a2a00;
+  --border: #8b7846;
+  --border-subtle: #cdbb8c;
 }
 
 body[data-layer="academic"] {
-  --accent: #2a78c8;
-  --accent-soft: #d6e7fb;
-  --accent-deep: #1c4f8c;
+  --accent: #2b74bf;
+  --accent-soft: #d7e7fb;
+  --accent-deep: #1d4d84;
+  --accent-surface: #eaf2fe;
+  --accent-ink: #112e52;
+  --border: #5c7fa8;
+  --border-subtle: #a8c0dc;
+}
+
+body[data-layer="non-diegetic"] {
+  --accent: #5f6d7a;
+  --accent-soft: #dde4ec;
+  --accent-deep: #3d4955;
+  --accent-surface: #eef2f7;
+  --accent-ink: #1f2730;
+  --border: #6f7b88;
+  --border-subtle: #b6c0ca;
+}
+
+/* Dark-mode layer overrides */
+body[data-theme="dark"][data-layer="solar"] {
+  --accent: #f0c56e;
+  --accent-soft: #36280f;
+  --accent-deep: #ffcf74;
+  --accent-surface: #21190c;
+  --accent-ink: #ffe7b8;
+  --border: #c6a25f;
+  --border-subtle: #8e7345;
+}
+
+body[data-theme="dark"][data-layer="academic"] {
+  --accent: #88c2ff;
+  --accent-soft: #14273f;
+  --accent-deep: #9fd0ff;
+  --accent-surface: #101f34;
+  --accent-ink: #e0f1ff;
+  --border: #82aad4;
+  --border-subtle: #5a7593;
+}
+
+body[data-theme="dark"][data-layer="non-diegetic"] {
+  --accent: #a4b4c6;
+  --accent-soft: #1a222b;
+  --accent-deep: #c1ceda;
+  --accent-surface: #141b22;
+  --accent-ink: #e7edf4;
+  --border: #8f9eae;
+  --border-subtle: #606b77;
 }

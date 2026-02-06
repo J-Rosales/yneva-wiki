@@ -24,12 +24,8 @@ const tooltip =
       </a>
     ))}
   </nav>
-  <script type="application/json" data-layer-html>
-    {JSON.stringify(layerHtml)}
-  </script>
-  <script type="application/json" data-layer-slug>
-    {JSON.stringify(slug)}
-  </script>
+  <script type="application/json" data-layer-html set:html={JSON.stringify(layerHtml)} />
+  <script type="application/json" data-layer-slug set:html={JSON.stringify(slug)} />
 </section>
 
 <script>
@@ -42,15 +38,18 @@ const tooltip =
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", (e) => {
-        e.preventDefault();
         const layer = tab.getAttribute("data-layer");
         const html = htmlMap[layer];
         if (body && html) {
+          e.preventDefault();
           body.innerHTML = html;
+          document.body.setAttribute("data-layer", layer);
           history.pushState(null, "", `/wiki/${slug}/${layer}/`);
           tabs.forEach((t) => t.classList.remove("is-active"));
           tab.classList.add("is-active");
+          return;
         }
+        // If inline content is unavailable, fall through to normal navigation.
       });
     });
   }
